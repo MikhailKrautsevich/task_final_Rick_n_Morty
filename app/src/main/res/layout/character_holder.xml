@@ -64,18 +64,17 @@
         android:id="@+id/label_spec_textview"
         style="@style/TextViewOfRecyclerView.LabelTextView"
         android:text="@string/label_species"
-        app:layout_constraintTop_toTopOf="@id/spec_textview"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/spec_textview" />
 
     <TextView
         android:id="@+id/label_gender_textview"
         style="@style/TextViewOfRecyclerView.LabelTextView"
         android:text="@string/label_gender"
-        app:layout_constraintTop_toTopOf="@id/gender_textview"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideline"
- />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/gender_textview" />
 
     <TextView
         android:id="@+id/label_status_textview"

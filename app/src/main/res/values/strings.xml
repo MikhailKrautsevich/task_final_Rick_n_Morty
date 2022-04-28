@@ -8,4 +8,10 @@
     <string name="label_gender">Gender:</string>
     <string name="label_species">Species:</string>
     <string name="label_status">Status:</string>
+    <string name="hint_episode_name">episode_name</string>
+    <string name="hint_episode_number">episode_number</string>
+    <string name="hint_episode_air_date">episode_air_date</string>
+    <string name="label_ep_name">Name:</string>
+    <string name="label_ep_episode">Episode:</string>
+    <string name="label_ep_air_date">Air date:</string>
 </resources>
