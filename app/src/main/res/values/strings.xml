@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Rick &amp; Morty App by Krautsevich</string>
+    <string name="hint_char_name">Name</string>
+    <string name="hint_char_species">Species</string>
+    <string name="hint_char_gender">Gender</string>
+    <string name="hint_char_status">Status</string>
+    <string name="label_name">Name:</string>
+    <string name="label_gender">Gender:</string>
+    <string name="label_species">Species:</string>
+    <string name="label_status">Status:</string>
 </resources>
