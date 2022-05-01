@@ -2,6 +2,8 @@ package com.mk.rickmortyappbykrautsevich
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+//import android.util.Log
+//import android.view.MenuItem
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
                 CharactersListFragment.newInstance(),
                 null
             )
+            addToBackStack(null)
             commit()
         }
     }
@@ -35,15 +38,15 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView?.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.to_chars -> {
-                    setFragment(CharactersListFragment())
+                    setFragment(CharactersListFragment.newInstance())
                     return@setOnItemSelectedListener true
                 }
                 R.id.to_locations -> {
-                    setFragment(LocationListFragment())
+                    setFragment(LocationListFragment.newInstance())
                     return@setOnItemSelectedListener true
                 }
                 R.id.to_episodes -> {
-                    setFragment(EpisodeListFragment())
+                    setFragment(EpisodeListFragment.newInstance())
                     return@setOnItemSelectedListener true
                 }
                 else -> false
@@ -58,5 +61,22 @@ class MainActivity : AppCompatActivity() {
             replace(R.id.fragment_container, fragment, tag)
             addToBackStack(tag).commit()
         }
+//        initGoBackArrow()
     }
+
+//    private fun initGoBackArrow() {
+//        val transactionCount = supportFragmentManager.backStackEntryCount
+//        Log.d("11111", transactionCount.toString())
+//        val trCountIsMoreThanZero = transactionCount > -1
+//        supportActionBar?.setDisplayHomeAsUpEnabled(trCountIsMoreThanZero)
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        if (item.itemId == android.R.id.home) {
+//            supportFragmentManager.popBackStack()
+//            initGoBackArrow()
+//            return true
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 }
