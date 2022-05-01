@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/to_chars"
+        android:enabled="true"
+        android:icon="@drawable/ic_bot_nav_to_characters"
+        android:title="@string/bot_nav_to_characters" />
+    <item
+        android:id="@+id/to_locations"
+        android:enabled="true"
+        android:icon="@drawable/ic_bot_nav_to_location"
+        android:title="@string/bot_nav_to_locations" />
+    <item
+        android:id="@+id/to_episodes"
+        android:enabled="true"
+        android:icon="@drawable/ic_bot_nav_to_eps"
+        android:title="@string/bot_nav_to_eps" />
+</menu>

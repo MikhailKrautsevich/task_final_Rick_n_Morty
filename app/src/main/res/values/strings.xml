@@ -20,4 +20,7 @@
     <string name="label_loc_name">Loc. name:</string>
     <string name="label_loc_type">Loc. type:</string>
     <string name="label_loc_dimension">Dimension:</string>
+    <string name="bot_nav_to_characters">To characters</string>
+    <string name="bot_nav_to_locations">To locations</string>
+    <string name="bot_nav_to_eps">To episodes</string>
 </resources>
