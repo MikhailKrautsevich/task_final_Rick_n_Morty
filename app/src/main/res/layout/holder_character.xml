@@ -24,7 +24,7 @@
         style="@style/TextViewOfRecyclerView.ValueTextView"
         android:hint="@string/hint_char_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/char_image" />
 
     <TextView
@@ -32,7 +32,7 @@
         style="@style/TextViewOfRecyclerView.ValueTextView"
         android:hint="@string/hint_char_species"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/name_textview" />
 
     <TextView
@@ -40,7 +40,7 @@
         style="@style/TextViewOfRecyclerView.ValueTextView"
         android:hint="@string/hint_char_gender"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/spec_textview" />
 
     <TextView
@@ -48,7 +48,7 @@
         style="@style/TextViewOfRecyclerView.ValueTextView"
         android:hint="@string/hint_char_status"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/gender_textview" />
 
     <TextView
@@ -56,7 +56,7 @@
         style="@style/TextViewOfRecyclerView.LabelTextView"
         android:text="@string/label_name"
         app:layout_constraintBottom_toBottomOf="@+id/name_textview"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/name_textview" />
 
@@ -64,7 +64,7 @@
         android:id="@+id/label_spec_textview"
         style="@style/TextViewOfRecyclerView.LabelTextView"
         android:text="@string/label_species"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/spec_textview" />
 

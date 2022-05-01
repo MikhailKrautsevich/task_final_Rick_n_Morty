@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.R
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeRecData
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
 
-class EpisodeListFragment : Fragment() {
+class LocationListFragment:Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = EpisodeListFragment()
+        fun newInstance() = LocationListFragment()
     }
 
     private var recyclerView: RecyclerView? = null
@@ -37,62 +37,63 @@ class EpisodeListFragment : Fragment() {
         super.onStart()
         recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
-            adapter = EpisodeAdapter(ArrayList())
+            adapter = LocationAdapter(ArrayList())
         }
     }
 
-    inner class EpisodeAdapter(private var episodes: List<EpisodeRecData>) :
-        RecyclerView.Adapter<EpisodeAdapter.EpisodeHolder>() {
+    inner class LocationAdapter(private var locs: List<LocationRecData>) :
+        RecyclerView.Adapter<LocationAdapter.LocationHolder>() {
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-        ): EpisodeAdapter.EpisodeHolder {
+        ): LocationAdapter.LocationHolder {
             val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.holder_episode, parent, false)
-            return EpisodeHolder(itemView)
+                .inflate(R.layout.holder_location, parent, false)
+            return LocationHolder(itemView)
         }
 
-        override fun onBindViewHolder(holder: EpisodeAdapter.EpisodeHolder, position: Int) {
-            holder.bind(episodes[position])
+        override fun onBindViewHolder(holder: LocationAdapter.LocationHolder, position: Int) {
+            holder.bind(locs[position])
         }
 
-        override fun getItemCount(): Int = episodes.size
+        override fun getItemCount(): Int = locs.size
 
-        fun changeContacts(list: List<EpisodeRecData>) {
-            val old = episodes
+        fun changeContacts(list: List<LocationRecData>) {
+            val old = locs
             val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = list)
             val result = DiffUtil.calculateDiff(diffUtilCallback, false)
-            episodes = list
+            locs = list
             result.dispatchUpdatesTo(this)
         }
 
-        inner class EpisodeHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        inner class LocationHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
             View.OnClickListener {
-            private val nameTextView: TextView = itemView.findViewById(R.id.ep_name_textview)
-            private val numberTextView: TextView = itemView.findViewById(R.id.ep_number_textview)
-            private val dateTextView: TextView = itemView.findViewById(R.id.ep_air_date_textview)
-            private var episodeBound: EpisodeRecData? = null
+            private val locNameTextView: TextView = itemView.findViewById(R.id.loc_name_textview)
+            private val locTypeTextView: TextView = itemView.findViewById(R.id.loc_type_textview)
+            private val locDimenTextView: TextView = itemView.findViewById(R.id.loc_dimen_textview)
+            private var locBound: LocationRecData? = null
 
             init {
                 itemView.setOnClickListener { this }
             }
 
-            fun bind(episode: EpisodeRecData) {
-                episodeBound = episode
-                nameTextView.text = episode.name
-                numberTextView.text = episode.episodeNumber.toString()
-                dateTextView.text = episode.airDate
+            fun bind(loc : LocationRecData) {
+                locBound = loc
+                locNameTextView.text = loc.name
+                locTypeTextView.text = loc.type
+                locDimenTextView.text = loc.dimension
             }
 
             override fun onClick(p0: View?) {
                 TODO("Not yet implemented")
             }
+
         }
 
         inner class ContactDiffUtilCallBack(
-            private val oldList: List<EpisodeRecData>,
-            private val newList: List<EpisodeRecData>
+            private val oldList: List<LocationRecData>,
+            private val newList: List<LocationRecData>
         ) : DiffUtil.Callback() {
             override fun getOldListSize() = oldList.size
 

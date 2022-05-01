@@ -14,4 +14,10 @@
     <string name="label_ep_name">Name:</string>
     <string name="label_ep_episode">Episode:</string>
     <string name="label_ep_air_date">Air date:</string>
+    <string name="hint_location_name">Location name</string>
+    <string name="hint_location_type">Location type</string>
+    <string name="hint_location_dimension">Location dimension</string>
+    <string name="label_loc_name">Loc. name:</string>
+    <string name="label_loc_type">Loc. type:</string>
+    <string name="label_loc_dimension">Dimension:</string>
 </resources>

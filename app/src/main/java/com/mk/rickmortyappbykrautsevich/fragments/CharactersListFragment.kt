@@ -52,7 +52,7 @@ class CharactersListFragment : Fragment() {
             viewType: Int
         ): CharacterAdapter.CharacterHolder {
             val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.character_holder, parent, false)
+                .inflate(R.layout.holder_character, parent, false)
             return CharacterHolder(itemView)
         }
 

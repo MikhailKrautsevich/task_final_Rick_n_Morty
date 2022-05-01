@@ -15,51 +15,51 @@
         app:layout_constraintGuide_percent="0.3" />
 
     <TextView
-        android:id="@+id/ep_name_textview"
+        android:id="@+id/loc_name_textview"
         style="@style/TextViewOfRecyclerView.ValueTextView"
-        android:hint="@string/hint_episode_name"
+        android:hint="@string/hint_location_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/ep_number_textview"
+        android:id="@+id/loc_type_textview"
         style="@style/TextViewOfRecyclerView.ValueTextView"
-        android:hint="@string/hint_episode_number"
+        android:hint="@string/hint_location_type"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/ep_name_textview" />
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/loc_name_textview" />
 
     <TextView
-        android:id="@+id/ep_air_date_textview"
+        android:id="@+id/loc_dimen_textview"
         style="@style/TextViewOfRecyclerView.ValueTextView"
-        android:hint="@string/hint_episode_air_date"
+        android:hint="@string/hint_location_dimension"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/ep_number_textview" />
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/loc_type_textview" />
 
     <TextView
-        android:id="@+id/label_name_ep"
+        android:id="@+id/label_loc_name"
         style="@style/TextViewOfRecyclerView.LabelTextView"
-        android:text="@string/label_ep_name"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
+        android:text="@string/label_loc_name"
+        app:layout_constraintEnd_toEndOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ep_name_textview" />
+        app:layout_constraintTop_toTopOf="@id/loc_name_textview" />
 
     <TextView
-        android:id="@+id/label_number_ep"
+        android:id="@+id/label_loc_type"
         style="@style/TextViewOfRecyclerView.LabelTextView"
-        android:text="@string/label_ep_episode"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
+        android:text="@string/label_loc_type"
+        app:layout_constraintEnd_toEndOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ep_number_textview" />
+        app:layout_constraintTop_toTopOf="@id/loc_type_textview" />
 
     <TextView
-        android:id="@+id/label_air_date_ep"
+        android:id="@+id/label_loc_dimension"
         style="@style/TextViewOfRecyclerView.LabelTextView"
-        android:text="@string/label_ep_air_date"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
+        android:text="@string/label_loc_dimension"
+        app:layout_constraintEnd_toEndOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ep_air_date_textview" />
+        app:layout_constraintTop_toTopOf="@id/loc_dimen_textview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
