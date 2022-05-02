@@ -22,14 +22,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
 
-        supportFragmentManager.beginTransaction().run {
-            replace(
-                R.id.fragment_container,
-                CharactersListFragment.newInstance(),
-                null
-            )
-            addToBackStack(null)
-            commit()
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction().run {
+                replace(
+                    R.id.fragment_container,
+                    CharactersListFragment.newInstance(),
+                    null
+                )
+                commit()
+            }
         }
     }
 
