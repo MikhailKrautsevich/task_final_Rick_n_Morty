@@ -3,16 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="4dp"
-    android:paddingEnd="4dp"
-    android:paddingBottom="4dp">
+    android:layout_margin="4dp"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <TextView
         android:id="@+id/ep_name_textview"
@@ -42,6 +41,7 @@
         android:id="@+id/label_name_ep"
         style="@style/TextViewOfRecyclerView.LabelTextView"
         android:text="@string/label_ep_name"
+        app:layout_constraintBottom_toBottomOf="@id/ep_name_textview"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ep_name_textview" />
@@ -50,6 +50,7 @@
         android:id="@+id/label_number_ep"
         style="@style/TextViewOfRecyclerView.LabelTextView"
         android:text="@string/label_ep_episode"
+        app:layout_constraintBottom_toBottomOf="@id/ep_number_textview"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ep_number_textview" />
@@ -58,6 +59,7 @@
         android:id="@+id/label_air_date_ep"
         style="@style/TextViewOfRecyclerView.LabelTextView"
         android:text="@string/label_ep_air_date"
+        app:layout_constraintBottom_toBottomOf="@id/ep_air_date_textview"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ep_air_date_textview" />

@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeRecData
+import com.mk.rickmortyappbykrautsevich.viewmodels.AllEpisodesViewModel
 
 class EpisodeListFragment : Fragment() {
 
@@ -22,6 +25,12 @@ class EpisodeListFragment : Fragment() {
 
     private var recyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
+    private val viewModel: AllEpisodesViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(AllEpisodesViewModel::class.java)
+    }
+
+    private var loadingLiveData: LiveData<Boolean>? = null
+    private var episodeLiveData: LiveData<List<EpisodeRecData>>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,9 +44,26 @@ class EpisodeListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        loadingLiveData = viewModel.getLoadingLiveData()
+        loadingLiveData?.observe(
+            viewLifecycleOwner
+        ) { loading ->
+            loading?.let {
+                if (it) {
+                    progressBar?.visibility = View.VISIBLE
+                } else progressBar?.visibility = View.INVISIBLE
+            }
+        }
+        episodeLiveData = viewModel.getEpisodesList()
+
         recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
             adapter = EpisodeAdapter(ArrayList())
+        }
+        episodeLiveData?.observe(viewLifecycleOwner) { list ->
+            list?.let {
+                (recyclerView?.adapter as EpisodeListFragment.EpisodeAdapter).changeContacts(it)
+            }
         }
     }
 
@@ -81,7 +107,7 @@ class EpisodeListFragment : Fragment() {
             fun bind(episode: EpisodeRecData) {
                 episodeBound = episode
                 nameTextView.text = episode.name
-                numberTextView.text = episode.episodeNumber.toString()
+                numberTextView.text = episode.episode
                 dateTextView.text = episode.airDate
             }
 

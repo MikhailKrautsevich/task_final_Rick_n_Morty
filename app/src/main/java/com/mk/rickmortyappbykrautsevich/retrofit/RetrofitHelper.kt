@@ -1,6 +1,7 @@
 package com.mk.rickmortyappbykrautsevich.retrofit
 
 import com.mk.rickmortyappbykrautsevich.retrofit.api.GetCharactersApi
+import com.mk.rickmortyappbykrautsevich.retrofit.api.GetEpisodesApi
 import com.mk.rickmortyappbykrautsevich.retrofit.api.GetLocationsApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,5 +32,8 @@ class RetrofitHelper {
 
         fun getLocsApi(retrofit: Retrofit): GetLocationsApi =
             retrofit.create(GetLocationsApi::class.java)
+
+        fun getEpsApi(retrofit: Retrofit) : GetEpisodesApi =
+            retrofit.create(GetEpisodesApi::class.java)
     }
 }
