@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
+import com.mk.rickmortyappbykrautsevich.viewmodels.AllLocationViewModel
 
-class LocationListFragment:Fragment() {
+class LocationListFragment : Fragment() {
 
     companion object {
         @JvmStatic
@@ -22,12 +25,18 @@ class LocationListFragment:Fragment() {
 
     private var recyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
+    private val viewModel: AllLocationViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(AllLocationViewModel::class.java)
+    }
+
+    private var loadingLiveData: LiveData<Boolean>? = null
+    private var locationsLiveData: LiveData<List<LocationRecData>>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_episode_list, container, false)
+        val v = inflater.inflate(R.layout.fragment_location_list, container, false)
         recyclerView = v.findViewById(R.id.recyclerCharacters)
         progressBar = v.findViewById(R.id.progress_bar)
         return v
@@ -35,9 +44,26 @@ class LocationListFragment:Fragment() {
 
     override fun onStart() {
         super.onStart()
+        loadingLiveData = viewModel.getLoadingLiveData()
+        loadingLiveData?.observe(
+            viewLifecycleOwner
+        ) { loading ->
+            loading?.let {
+                if (it) {
+                    progressBar?.visibility = View.VISIBLE
+                } else progressBar?.visibility = View.INVISIBLE
+            }
+        }
+        locationsLiveData = viewModel.getLocationsList()
+
         recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
             adapter = LocationAdapter(ArrayList())
+        }
+        locationsLiveData?.observe(viewLifecycleOwner) { list ->
+            list?.let {
+                (recyclerView?.adapter as LocationAdapter).changeContacts(it)
+            }
         }
     }
 
@@ -78,7 +104,7 @@ class LocationListFragment:Fragment() {
                 itemView.setOnClickListener { this }
             }
 
-            fun bind(loc : LocationRecData) {
+            fun bind(loc: LocationRecData) {
                 locBound = loc
                 locNameTextView.text = loc.name
                 locTypeTextView.text = loc.type

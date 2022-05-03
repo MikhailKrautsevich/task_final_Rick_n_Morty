@@ -1,6 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.retrofit.models
 
-data class AllCharactersContainer(
+data class AllLocationsContainer(
     var info: ContainerInfo,
-    var results: List<CharacterRetrofitModel>
+    var results: List<LocationRetrofitModel>
 )

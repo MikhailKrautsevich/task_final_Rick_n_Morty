@@ -7,5 +7,5 @@ import retrofit2.http.GET
 interface GetCharactersApi {
 
     @GET(value = "character")
-    fun getAllCharactersInSingle():Single<AllCharactersContainer>
+    fun getAllCharacters(): Single<AllCharactersContainer>
 }

@@ -14,5 +14,5 @@ class AllCharactersProvider {
         api = RetrofitHelper.getCharsApi(retrofit)
     }
 
-    fun loadAllCharacters(): Single<AllCharactersContainer>? = api?.getAllCharactersInSingle()
+    fun loadAllCharacters(): Single<AllCharactersContainer>? = api?.getAllCharacters()
 }
