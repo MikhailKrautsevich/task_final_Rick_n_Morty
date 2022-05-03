@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterRecData
+import com.mk.rickmortyappbykrautsevich.viewmodels.AllCharactersViewModel
 import com.squareup.picasso.Picasso
 
 class CharactersListFragment : Fragment() {
@@ -25,6 +28,12 @@ class CharactersListFragment : Fragment() {
     private val picasso = Picasso.get()
     private var recyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
+    private val viewModel: AllCharactersViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(AllCharactersViewModel::class.java)
+    }
+
+    private var loadingLiveData: LiveData<Boolean>? = null
+    private var charactersLiveData: LiveData<List<CharacterRecData>>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,9 +47,27 @@ class CharactersListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        loadingLiveData = viewModel.getLoadingLiveData()
+        loadingLiveData?.observe(
+            viewLifecycleOwner
+        ) { loading ->
+            loading?.let {
+                if (it) {
+                    progressBar?.visibility = View.VISIBLE
+                } else progressBar?.visibility = View.INVISIBLE
+            }
+        }
+        charactersLiveData = viewModel.getCharactersList()
+
         recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
             adapter = CharacterAdapter(ArrayList())
+        }
+        charactersLiveData?.observe(viewLifecycleOwner
+        ) { list ->
+            list?.let {
+                (recyclerView?.adapter as CharacterAdapter).changeContacts(it)
+            }
         }
     }
 

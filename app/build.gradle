@@ -52,4 +52,11 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.8.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
     // ретрофит для работы с интернетом
+
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    //RX-adapter
+
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation "io.reactivex.rxjava3:rxjava:3.0.9"
+    //RX
 }
