@@ -1,5 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterRecData
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllCharactersViewModel
@@ -25,6 +27,7 @@ class CharactersListFragment : Fragment() {
         fun newInstance() = CharactersListFragment()
     }
 
+    private var hasBottomNavs: HasBottomNavs? = null
     private val picasso = Picasso.get()
     private var recyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
@@ -34,6 +37,12 @@ class CharactersListFragment : Fragment() {
 
     private var loadingLiveData: LiveData<Boolean>? = null
     private var charactersLiveData: LiveData<List<CharacterRecData>>? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is HasBottomNavs)
+            hasBottomNavs = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +56,7 @@ class CharactersListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        hasBottomNavs?.setButtonsEnabled(this)
         loadingLiveData = viewModel.getLoadingLiveData()
         loadingLiveData?.observe(
             viewLifecycleOwner
@@ -63,12 +73,18 @@ class CharactersListFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
             adapter = CharacterAdapter(ArrayList())
         }
-        charactersLiveData?.observe(viewLifecycleOwner
+        charactersLiveData?.observe(
+            viewLifecycleOwner
         ) { list ->
             list?.let {
                 (recyclerView?.adapter as CharacterAdapter).changeContacts(it)
             }
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        hasBottomNavs = null
     }
 
     inner class CharacterAdapter(private var characters: List<CharacterRecData>) :

@@ -1,5 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllLocationViewModel
@@ -23,6 +25,7 @@ class LocationListFragment : Fragment() {
         fun newInstance() = LocationListFragment()
     }
 
+    private var hasBottomNavs: HasBottomNavs? = null
     private var recyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
     private val viewModel: AllLocationViewModel by lazy {
@@ -31,6 +34,12 @@ class LocationListFragment : Fragment() {
 
     private var loadingLiveData: LiveData<Boolean>? = null
     private var locationsLiveData: LiveData<List<LocationRecData>>? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is HasBottomNavs)
+            hasBottomNavs = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +53,7 @@ class LocationListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        hasBottomNavs?.setButtonsEnabled(this)
         loadingLiveData = viewModel.getLoadingLiveData()
         loadingLiveData?.observe(
             viewLifecycleOwner
@@ -65,6 +75,11 @@ class LocationListFragment : Fragment() {
                 (recyclerView?.adapter as LocationAdapter).changeContacts(it)
             }
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        hasBottomNavs = null
     }
 
     inner class LocationAdapter(private var locs: List<LocationRecData>) :

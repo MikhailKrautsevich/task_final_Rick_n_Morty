@@ -1,5 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeRecData
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllEpisodesViewModel
@@ -23,6 +25,7 @@ class EpisodeListFragment : Fragment() {
         fun newInstance() = EpisodeListFragment()
     }
 
+    private var hasBottomNavs: HasBottomNavs? = null
     private var recyclerView: RecyclerView? = null
     private var progressBar: ProgressBar? = null
     private val viewModel: AllEpisodesViewModel by lazy {
@@ -31,6 +34,12 @@ class EpisodeListFragment : Fragment() {
 
     private var loadingLiveData: LiveData<Boolean>? = null
     private var episodeLiveData: LiveData<List<EpisodeRecData>>? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is HasBottomNavs)
+            hasBottomNavs = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +53,7 @@ class EpisodeListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        hasBottomNavs?.setButtonsEnabled(this)
         loadingLiveData = viewModel.getLoadingLiveData()
         loadingLiveData?.observe(
             viewLifecycleOwner
@@ -65,6 +75,11 @@ class EpisodeListFragment : Fragment() {
                 (recyclerView?.adapter as EpisodeListFragment.EpisodeAdapter).changeContacts(it)
             }
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        hasBottomNavs = null
     }
 
     inner class EpisodeAdapter(private var episodes: List<EpisodeRecData>) :

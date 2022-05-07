@@ -5,22 +5,33 @@ import android.os.Bundle
 //import android.util.Log
 //import android.view.MenuItem
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mk.rickmortyappbykrautsevich.fragments.CharactersListFragment
 import com.mk.rickmortyappbykrautsevich.fragments.EpisodeListFragment
 import com.mk.rickmortyappbykrautsevich.fragments.LocationListFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), HasBottomNavs {
 
     private var bottomNavigationView: BottomNavigationView? = null
     private var intTag: Int = 0
+
+    private var navBtnToCharacters: BottomNavigationItemView? = null
+    private var navBtnToEpisodes: BottomNavigationItemView? = null
+    private var navBtnToLocations: BottomNavigationItemView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         setContentView(R.layout.activity_main)
         bottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView?.let {
+            navBtnToCharacters = it.findViewById(R.id.to_chars)
+            navBtnToEpisodes = it.findViewById(R.id.to_episodes)
+            navBtnToLocations = it.findViewById(R.id.to_locations)
+        }
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().run {
@@ -63,6 +74,51 @@ class MainActivity : AppCompatActivity() {
             addToBackStack(tag).commit()
         }
 //        initGoBackArrow()
+    }
+
+    override fun setButtonsEnabled(fragment: Fragment) {
+        makeAllNavButtonsEnabled()
+        when (fragment::class.java.simpleName) {
+            CharactersListFragment::class.java.simpleName -> {
+                navBtnToCharacters?.let {
+                    it.isClickable = false
+                }
+                bottomNavigationView?.menu?.getItem(0)?.isChecked = true
+            }
+            LocationListFragment::class.java.simpleName -> {
+                navBtnToLocations?.let {
+                    it.isClickable = false
+                }
+                bottomNavigationView?.menu?.getItem(1)?.isChecked = true
+            }
+            EpisodeListFragment::class.java.simpleName -> {
+                navBtnToEpisodes?.let {
+                    it.isClickable = false
+                }
+                bottomNavigationView?.menu?.getItem(2)?.isChecked = true
+            }
+            else -> {
+                setNoCheckedNavButtons()
+            }
+        }
+    }
+
+    private fun makeAllNavButtonsEnabled() {
+        navBtnToCharacters?.let {
+            it.isClickable = true
+        }
+        navBtnToLocations?.let {
+            it.isClickable = true
+        }
+        navBtnToEpisodes?.let {
+            it.isClickable = true
+        }
+    }
+
+    private fun setNoCheckedNavButtons() {
+        for (i in 0 until bottomNavigationView?.menu?.size!!) {
+            bottomNavigationView?.menu?.getItem(i)?.isChecked = false
+        }
     }
 
 //    private fun initGoBackArrow() {
