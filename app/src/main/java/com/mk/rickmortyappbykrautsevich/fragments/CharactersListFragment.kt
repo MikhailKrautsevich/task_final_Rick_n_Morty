@@ -30,7 +30,8 @@ class CharactersListFragment : Fragment() {
     private var hasBottomNavs: HasBottomNavs? = null
     private val picasso = Picasso.get()
     private var recyclerView: RecyclerView? = null
-    private var progressBar: ProgressBar? = null
+    private var mainProgressBar: ProgressBar? = null
+    private var pagingProgressBar: ProgressBar? = null
     private val viewModel: AllCharactersViewModel by lazy {
         ViewModelProvider(requireActivity()).get(AllCharactersViewModel::class.java)
     }
@@ -50,7 +51,8 @@ class CharactersListFragment : Fragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_characters_list, container, false)
         recyclerView = v.findViewById(R.id.recyclerCharacters)
-        progressBar = v.findViewById(R.id.progress_bar)
+        mainProgressBar = v.findViewById(R.id.progress_bar)
+        pagingProgressBar = v.findViewById(R.id.paging_progress_bar)
         return v
     }
 
@@ -63,8 +65,8 @@ class CharactersListFragment : Fragment() {
         ) { loading ->
             loading?.let {
                 if (it) {
-                    progressBar?.visibility = View.VISIBLE
-                } else progressBar?.visibility = View.INVISIBLE
+                    mainProgressBar?.visibility = View.VISIBLE
+                } else mainProgressBar?.visibility = View.INVISIBLE
             }
         }
         charactersLiveData = viewModel.getCharactersList()

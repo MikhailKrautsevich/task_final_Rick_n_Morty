@@ -27,7 +27,8 @@ class EpisodeListFragment : Fragment() {
 
     private var hasBottomNavs: HasBottomNavs? = null
     private var recyclerView: RecyclerView? = null
-    private var progressBar: ProgressBar? = null
+    private var mainProgressBar: ProgressBar? = null
+    private var pagingProgressBar: ProgressBar? = null
     private val viewModel: AllEpisodesViewModel by lazy {
         ViewModelProvider(requireActivity()).get(AllEpisodesViewModel::class.java)
     }
@@ -46,8 +47,9 @@ class EpisodeListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.fragment_episode_list, container, false)
-        recyclerView = v.findViewById(R.id.recyclerCharacters)
-        progressBar = v.findViewById(R.id.progress_bar)
+        recyclerView = v.findViewById(R.id.recyclerEpisodes)
+        mainProgressBar = v.findViewById(R.id.progress_bar)
+        pagingProgressBar = v.findViewById(R.id.paging_progress_bar)
         return v
     }
 
@@ -60,8 +62,8 @@ class EpisodeListFragment : Fragment() {
         ) { loading ->
             loading?.let {
                 if (it) {
-                    progressBar?.visibility = View.VISIBLE
-                } else progressBar?.visibility = View.INVISIBLE
+                    mainProgressBar?.visibility = View.VISIBLE
+                } else mainProgressBar?.visibility = View.INVISIBLE
             }
         }
         episodeLiveData = viewModel.getEpisodesList()
