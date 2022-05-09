@@ -90,6 +90,7 @@ class AllEpisodesViewModel : ViewModel() {
     @Synchronized
     private fun addSynchronized(list: List<EpisodeRecData>) {
         episodesList.addAll(list)
+        episodesList.sortBy { it.id }
         listLiveData.postValue(episodesList)
     }
 }

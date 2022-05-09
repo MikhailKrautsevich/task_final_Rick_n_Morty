@@ -89,6 +89,7 @@ class AllLocationViewModel : ViewModel() {
     @Synchronized
     private fun addSynchronized(list: List<LocationRecData>) {
         locationsList.addAll(list)
+        locationsList.sortBy { it.id }
         listLiveData.postValue(locationsList)
     }
 }
