@@ -34,6 +34,8 @@ class LocationListFragment : Fragment() {
     }
 
     private var loadingLiveData: LiveData<Boolean>? = null
+    private var pagingLiveData: LiveData<Boolean>? = null
+    private var hasNextPageLiveData: LiveData<Boolean>? = null
     private var locationsLiveData: LiveData<List<LocationRecData>>? = null
 
     override fun onAttach(context: Context) {
@@ -66,15 +68,49 @@ class LocationListFragment : Fragment() {
                 } else mainProgressBar?.visibility = View.INVISIBLE
             }
         }
+
+        pagingLiveData = viewModel.getPaginationLiveData()
+        pagingLiveData?.observe(
+            viewLifecycleOwner
+        ) { loading ->
+            loading?.let {
+                if (it) {
+                    pagingProgressBar?.visibility = View.VISIBLE
+                } else mainProgressBar?.visibility = View.GONE
+            }
+        }
         locationsLiveData = viewModel.getLocationsList()
 
         recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+
+                    val endHasBeenReached = (lastVisible + 3) >= totalItemCount
+                    if (endHasBeenReached) {
+                        viewModel.getMoreData()
+                    }
+                }
+            })
+
             adapter = LocationAdapter(ArrayList())
         }
         locationsLiveData?.observe(viewLifecycleOwner) { list ->
             list?.let {
-                (recyclerView?.adapter as LocationAdapter).changeContacts(it)
+                (recyclerView?.adapter as LocationAdapter).changeData(it)
+            }
+        }
+
+        hasNextPageLiveData = viewModel.getHasNextPageLiveData()
+        hasNextPageLiveData?.observe(
+            viewLifecycleOwner
+        ) { t ->
+            if (t == false) {
+                recyclerView?.clearOnScrollListeners()
+                pagingProgressBar?.visibility = View.GONE
             }
         }
     }
@@ -102,11 +138,13 @@ class LocationListFragment : Fragment() {
 
         override fun getItemCount(): Int = locs.size
 
-        fun changeContacts(list: List<LocationRecData>) {
+        fun changeData(list: List<LocationRecData>) {
+            val new = ArrayList<LocationRecData>()
+            new.addAll(list)
             val old = locs
-            val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = list)
+            val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = new)
             val result = DiffUtil.calculateDiff(diffUtilCallback, false)
-            locs = list
+            locs = new
             result.dispatchUpdatesTo(this)
         }
 

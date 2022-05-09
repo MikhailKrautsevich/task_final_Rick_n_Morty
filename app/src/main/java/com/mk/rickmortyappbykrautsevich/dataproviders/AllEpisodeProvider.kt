@@ -6,7 +6,7 @@ import com.mk.rickmortyappbykrautsevich.retrofit.models.AllEpisodesContainer
 import io.reactivex.rxjava3.core.Single
 
 class AllEpisodeProvider {
-    var api: GetEpisodesApi? = null
+    private var api: GetEpisodesApi? = null
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())

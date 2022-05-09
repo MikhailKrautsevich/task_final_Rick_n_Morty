@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Single
 
 class AllCharactersProvider {
 
-    var api: GetCharactersApi? = null
+    private var api: GetCharactersApi? = null
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
