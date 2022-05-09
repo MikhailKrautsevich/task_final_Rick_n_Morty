@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface GetCharactersApi {
 
     @GET(value = "character")
-    fun getAllCharacters(
+    fun getCharacters(
         @Query(value = "page") @IntRange(from = 1, to = 42) page: Int = 1,
         @Query(value = "name") name: String? = null,
         @Query(value = "status") status: Status? = null,

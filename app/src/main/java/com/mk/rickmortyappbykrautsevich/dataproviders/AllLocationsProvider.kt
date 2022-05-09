@@ -19,14 +19,14 @@ class AllLocationsProvider {
         api = RetrofitHelper.getLocsApi(retrofit)
     }
 
-    fun loadAllLocations(): Single<List<LocationRecData>>? {
-        val single = api?.getAllLocations()
+    fun loadLocations(): Single<List<LocationRecData>>? {
+        val single = api?.getLocations()
         return handleSingle(single)
     }
 
     fun loadNewPage(): Single<List<LocationRecData>>? {
         return if (hasMoreData()) {
-            val single = api?.getAllLocations(page = ++currentPageNumber)
+            val single = api?.getLocations(page = ++currentPageNumber)
             handleSingle(single)
         } else Single.just(emptyList())
     }

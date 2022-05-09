@@ -34,6 +34,8 @@ class EpisodeListFragment : Fragment() {
     }
 
     private var loadingLiveData: LiveData<Boolean>? = null
+    private var pagingLiveData: LiveData<Boolean>? = null
+    private var hasNextPageLiveData: LiveData<Boolean>? = null
     private var episodeLiveData: LiveData<List<EpisodeRecData>>? = null
 
     override fun onAttach(context: Context) {
@@ -66,15 +68,49 @@ class EpisodeListFragment : Fragment() {
                 } else mainProgressBar?.visibility = View.INVISIBLE
             }
         }
-        episodeLiveData = viewModel.getEpisodesList()
 
+        pagingLiveData = viewModel.getPaginationLiveData()
+        pagingLiveData?.observe(
+            viewLifecycleOwner
+        ) { loading ->
+            loading?.let {
+                if (it) {
+                    pagingProgressBar?.visibility = View.VISIBLE
+                } else mainProgressBar?.visibility = View.GONE
+            }
+        }
+
+        episodeLiveData = viewModel.getEpisodesList()
         recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+
+                    val endHasBeenReached = (lastVisible + 3) >= totalItemCount
+                    if (endHasBeenReached) {
+                        viewModel.getMoreData()
+                    }
+                }
+            })
+
             adapter = EpisodeAdapter(ArrayList())
         }
         episodeLiveData?.observe(viewLifecycleOwner) { list ->
             list?.let {
                 (recyclerView?.adapter as EpisodeListFragment.EpisodeAdapter).changeContacts(it)
+            }
+        }
+
+        hasNextPageLiveData = viewModel.getHasNextPageLiveData()
+        hasNextPageLiveData?.observe(
+            viewLifecycleOwner
+        ) { t ->
+            if (t == false) {
+                recyclerView?.clearOnScrollListeners()
+                pagingProgressBar?.visibility = View.GONE
             }
         }
     }
@@ -103,10 +139,12 @@ class EpisodeListFragment : Fragment() {
         override fun getItemCount(): Int = episodes.size
 
         fun changeContacts(list: List<EpisodeRecData>) {
+            val new = ArrayList<EpisodeRecData>()
+            new.addAll(list)
             val old = episodes
-            val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = list)
+            val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = new)
             val result = DiffUtil.calculateDiff(diffUtilCallback, false)
-            episodes = list
+            episodes = new
             result.dispatchUpdatesTo(this)
         }
 

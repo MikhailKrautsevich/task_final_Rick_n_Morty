@@ -23,7 +23,7 @@ class AllLocationViewModel : ViewModel() {
     init {
         // при true ProgressBar виден
         loadingLiveData.postValue(true)
-        val single = dataProvider.loadAllLocations()
+        val single = dataProvider.loadLocations()
         single?.let {
             val disposable = it.observeOn(Schedulers.newThread())
                 .subscribeWith(object : DisposableSingleObserver<List<LocationRecData>>() {

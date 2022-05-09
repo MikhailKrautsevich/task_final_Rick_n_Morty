@@ -79,8 +79,8 @@ class LocationListFragment : Fragment() {
                 } else mainProgressBar?.visibility = View.GONE
             }
         }
-        locationsLiveData = viewModel.getLocationsList()
 
+        locationsLiveData = viewModel.getLocationsList()
         recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
             addOnScrollListener(object : RecyclerView.OnScrollListener() {

@@ -22,13 +22,13 @@ class AllCharactersViewModel : ViewModel() {
     private val listLiveData: MutableLiveData<List<CharacterRecData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
-//    private val charactersList: ArrayList<CharacterRecData> = ArrayList()
+    //    private val charactersList: ArrayList<CharacterRecData> = ArrayList()
     private var disposable: Disposable? = null
 
     init {
         // при true ProgressBar виден
         loadingLiveData.postValue(true)
-        val single = dataProvider.loadAllCharacters()
+        val single = dataProvider.loadCharacters()
         single?.let {
             disposable = it.subscribeOn(Schedulers.io()).flatMap { t -> Single.just(t.results) }
                 .flatMap { t ->
