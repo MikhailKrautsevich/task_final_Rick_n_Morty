@@ -2,6 +2,7 @@ package com.mk.rickmortyappbykrautsevich.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,7 +77,7 @@ class LocationListFragment : Fragment() {
             loading?.let {
                 if (it) {
                     pagingProgressBar?.visibility = View.VISIBLE
-                } else mainProgressBar?.visibility = View.GONE
+                } else pagingProgressBar?.visibility = View.GONE
             }
         }
 

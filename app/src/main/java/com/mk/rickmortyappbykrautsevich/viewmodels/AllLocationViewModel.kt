@@ -72,6 +72,7 @@ class AllLocationViewModel : ViewModel() {
                                 "12356",
                                 "AllLocationViewModel: getMoreData() onError() ${e.localizedMessage}"
                             )
+                            paginationLiveData.postValue(false)
                         }
 
                     })

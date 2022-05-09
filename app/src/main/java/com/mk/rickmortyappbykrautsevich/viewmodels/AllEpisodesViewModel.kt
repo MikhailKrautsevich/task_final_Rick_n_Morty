@@ -73,6 +73,7 @@ class AllEpisodesViewModel : ViewModel() {
                                 "12356",
                                 "AllEpisodesViewModel: getMoreData() onError() ${e.localizedMessage}"
                             )
+                            paginationLiveData.postValue(false)
                         }
 
                     })

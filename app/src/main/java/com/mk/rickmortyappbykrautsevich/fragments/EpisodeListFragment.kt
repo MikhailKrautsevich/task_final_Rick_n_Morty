@@ -76,7 +76,7 @@ class EpisodeListFragment : Fragment() {
             loading?.let {
                 if (it) {
                     pagingProgressBar?.visibility = View.VISIBLE
-                } else mainProgressBar?.visibility = View.GONE
+                } else pagingProgressBar?.visibility = View.GONE
             }
         }
 
