@@ -15,7 +15,6 @@ class AllEpisodesViewModel : ViewModel() {
     private val listLiveData: MutableLiveData<List<EpisodeRecData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private val hasNextPageLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     private val episodesList: ArrayList<EpisodeRecData> = ArrayList()
     private val compositeDisposable = CompositeDisposable()
@@ -52,8 +51,6 @@ class AllEpisodesViewModel : ViewModel() {
 
     fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
 
-    fun getHasNextPageLiveData() = hasNextPageLiveData as LiveData<Boolean>
-
     fun getEpisodesList() = listLiveData as LiveData<List<EpisodeRecData>>
 
     fun getMoreData() {
@@ -79,7 +76,7 @@ class AllEpisodesViewModel : ViewModel() {
                     })
                 compositeDisposable.add(disposable)
             }
-        } else hasNextPageLiveData.postValue(false)
+        }
     }
 
     private fun postEmptyList() {

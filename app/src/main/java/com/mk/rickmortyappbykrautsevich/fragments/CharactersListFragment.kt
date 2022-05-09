@@ -37,6 +37,7 @@ class CharactersListFragment : Fragment() {
     }
 
     private var loadingLiveData: LiveData<Boolean>? = null
+    private var pagingLiveData: LiveData<Boolean>? = null
     private var charactersLiveData: LiveData<List<CharacterRecData>>? = null
 
     override fun onAttach(context: Context) {
@@ -71,8 +72,32 @@ class CharactersListFragment : Fragment() {
         }
         charactersLiveData = viewModel.getCharactersList()
 
+        pagingLiveData = viewModel.getPaginationLiveData()
+        pagingLiveData?.observe(
+            viewLifecycleOwner
+        ) { loading ->
+            loading?.let {
+                if (it) {
+                    pagingProgressBar?.visibility = View.VISIBLE
+                } else pagingProgressBar?.visibility = View.GONE
+            }
+        }
+
         recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val totalItemCount = layoutManager.itemCount
+                    val lastVisible = layoutManager.findLastVisibleItemPosition()
+
+                    val endHasBeenReached = (lastVisible + 3) >= totalItemCount
+                    if (endHasBeenReached) {
+                        viewModel.getMoreData()
+                    }
+                }
+            })
+
             adapter = CharacterAdapter(ArrayList())
         }
         charactersLiveData?.observe(
@@ -108,10 +133,12 @@ class CharactersListFragment : Fragment() {
         override fun getItemCount(): Int = characters.size
 
         fun changeContacts(list: List<CharacterRecData>) {
-            val oldCharacters = characters
-            val diffUtilCallback = ContactDiffUtilCallBack(oldList = oldCharacters, newList = list)
+            val new = ArrayList<CharacterRecData>()
+            new.addAll(list)
+            val old = characters
+            val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = new)
             val result = DiffUtil.calculateDiff(diffUtilCallback, false)
-            characters = list
+            characters = new
             result.dispatchUpdatesTo(this)
         }
 

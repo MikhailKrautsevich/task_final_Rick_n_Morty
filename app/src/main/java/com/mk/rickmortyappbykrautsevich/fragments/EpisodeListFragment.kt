@@ -35,7 +35,6 @@ class EpisodeListFragment : Fragment() {
 
     private var loadingLiveData: LiveData<Boolean>? = null
     private var pagingLiveData: LiveData<Boolean>? = null
-    private var hasNextPageLiveData: LiveData<Boolean>? = null
     private var episodeLiveData: LiveData<List<EpisodeRecData>>? = null
 
     override fun onAttach(context: Context) {
@@ -101,16 +100,6 @@ class EpisodeListFragment : Fragment() {
         episodeLiveData?.observe(viewLifecycleOwner) { list ->
             list?.let {
                 (recyclerView?.adapter as EpisodeListFragment.EpisodeAdapter).changeContacts(it)
-            }
-        }
-
-        hasNextPageLiveData = viewModel.getHasNextPageLiveData()
-        hasNextPageLiveData?.observe(
-            viewLifecycleOwner
-        ) { t ->
-            if (t == false) {
-                recyclerView?.clearOnScrollListeners()
-                pagingProgressBar?.visibility = View.GONE
             }
         }
     }

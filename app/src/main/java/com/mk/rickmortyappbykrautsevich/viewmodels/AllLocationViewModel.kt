@@ -15,7 +15,6 @@ class AllLocationViewModel : ViewModel() {
     private val listLiveData: MutableLiveData<List<LocationRecData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private val hasNextPageLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     private val locationsList: ArrayList<LocationRecData> = ArrayList()
     private val compositeDisposable = CompositeDisposable()
@@ -51,8 +50,6 @@ class AllLocationViewModel : ViewModel() {
 
     fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
 
-    fun getHasNextPageLiveData() = hasNextPageLiveData as LiveData<Boolean>
-
     fun getLocationsList() = listLiveData as LiveData<List<LocationRecData>>
 
     fun getMoreData() {
@@ -78,7 +75,7 @@ class AllLocationViewModel : ViewModel() {
                     })
                 compositeDisposable.add(disposable)
             }
-        } else hasNextPageLiveData.postValue(false)
+        }
     }
 
     private fun postEmptyList() {

@@ -35,7 +35,6 @@ class LocationListFragment : Fragment() {
 
     private var loadingLiveData: LiveData<Boolean>? = null
     private var pagingLiveData: LiveData<Boolean>? = null
-    private var hasNextPageLiveData: LiveData<Boolean>? = null
     private var locationsLiveData: LiveData<List<LocationRecData>>? = null
 
     override fun onAttach(context: Context) {
@@ -101,16 +100,6 @@ class LocationListFragment : Fragment() {
         locationsLiveData?.observe(viewLifecycleOwner) { list ->
             list?.let {
                 (recyclerView?.adapter as LocationAdapter).changeData(it)
-            }
-        }
-
-        hasNextPageLiveData = viewModel.getHasNextPageLiveData()
-        hasNextPageLiveData?.observe(
-            viewLifecycleOwner
-        ) { t ->
-            if (t == false) {
-                recyclerView?.clearOnScrollListeners()
-                pagingProgressBar?.visibility = View.GONE
             }
         }
     }
