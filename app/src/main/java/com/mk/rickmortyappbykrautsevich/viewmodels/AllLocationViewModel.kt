@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mk.rickmortyappbykrautsevich.dataproviders.AllLocationsProvider
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
+import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.LocationQuery
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -16,13 +17,32 @@ class AllLocationViewModel : ViewModel() {
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
-    private val locationsList: ArrayList<LocationRecData> = ArrayList()
+    private var locationsList: ArrayList<LocationRecData> = ArrayList()
     private val compositeDisposable = CompositeDisposable()
 
+    private var currentQuery: LocationQuery? = null
+
     init {
+        getData(null)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
+    }
+
+    fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
+
+    fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
+
+    fun getLocationsList() = listLiveData as LiveData<List<LocationRecData>>
+
+    fun getData(query: LocationQuery?) {
         // при true ProgressBar виден
         loadingLiveData.postValue(true)
-        val single = dataProvider.loadLocations()
+        currentQuery = query
+        locationsList = ArrayList()
+        val single = dataProvider.loadLocations(query)
         single?.let {
             val disposable = it.observeOn(Schedulers.newThread())
                 .subscribeWith(object : DisposableSingleObserver<List<LocationRecData>>() {
@@ -40,17 +60,6 @@ class AllLocationViewModel : ViewModel() {
             compositeDisposable.add(disposable)
         } ?: postEmptyList()
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
-    }
-
-    fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
-
-    fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
-
-    fun getLocationsList() = listLiveData as LiveData<List<LocationRecData>>
 
     fun getMoreData() {
         if (dataProvider.hasMoreData()) {

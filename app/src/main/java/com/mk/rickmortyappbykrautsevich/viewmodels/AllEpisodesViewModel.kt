@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mk.rickmortyappbykrautsevich.dataproviders.AllEpisodeProvider
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeRecData
+import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.EpisodeQuery
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -16,13 +17,31 @@ class AllEpisodesViewModel : ViewModel() {
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
-    private val episodesList: ArrayList<EpisodeRecData> = ArrayList()
+    private var episodesList: ArrayList<EpisodeRecData> = ArrayList()
     private val compositeDisposable = CompositeDisposable()
 
+    private var currentQuery: EpisodeQuery? = null
+
     init {
-        // при true ProgressBar виден
+        getData(null)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
+    }
+
+    fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
+
+    fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
+
+    fun getEpisodesList() = listLiveData as LiveData<List<EpisodeRecData>>
+
+    fun getData(query: EpisodeQuery?) {
         loadingLiveData.postValue(true)
-        val single = dataProvider.loadEpisodes()
+        currentQuery = query
+        episodesList = ArrayList()
+        val single = dataProvider.loadEpisodes(query)
         single?.let {
             val disposable =
                 it.observeOn(Schedulers.newThread())
@@ -41,17 +60,6 @@ class AllEpisodesViewModel : ViewModel() {
             compositeDisposable.add(disposable)
         } ?: postEmptyList()
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
-    }
-
-    fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
-
-    fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
-
-    fun getEpisodesList() = listLiveData as LiveData<List<EpisodeRecData>>
 
     fun getMoreData() {
         if (dataProvider.hasMoreData()) {

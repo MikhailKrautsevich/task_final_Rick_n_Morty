@@ -5,6 +5,7 @@ import com.mk.rickmortyappbykrautsevich.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.retrofit.api.GetCharactersApi
 import com.mk.rickmortyappbykrautsevich.retrofit.models.AllCharactersContainer
 import com.mk.rickmortyappbykrautsevich.retrofit.models.CharacterRetrofitModel
+import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.CharacterQuery
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -12,28 +13,50 @@ class AllCharactersProvider {
 
     private var api: GetCharactersApi? = null
     private var currentPageNumber = 1
-    private val maxPageNumber = 42
+
+    // при запросе по умолчанию число страниц 42
+    private var maxPageNumber = 42
+    private var currentQuery: CharacterQuery? = null
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
         api = RetrofitHelper.getCharsApi(retrofit)
     }
 
-    fun loadCharacters(): Single<List<CharacterRecData>>? {
-        val single = api?.getCharacters()
+    fun loadCharacters(query: CharacterQuery?): Single<List<CharacterRecData>>? {
+        currentPageNumber = 1
+        currentQuery = query
+        val single: Single<AllCharactersContainer>? = if (query == null) {
+            api?.getCharacters()
+        } else api?.getCharacters(
+            name = query.name,
+            status = query.status,
+            species = query.species,
+            type = query.type,
+            gender = query.gender
+        )
         return handleSingle(single)
     }
 
     fun loadNewPage(): Single<List<CharacterRecData>>? {
         return if (hasMoreData()) {
-            val single = api?.getCharacters(page = ++currentPageNumber)
+            val single = api?.getCharacters(
+                page = ++currentPageNumber,
+                name = currentQuery?.name,
+                status = currentQuery?.status,
+                species = currentQuery?.species,
+                type = currentQuery?.type,
+                gender = currentQuery?.gender
+            )
             handleSingle(single)
         } else Single.just(emptyList())
     }
 
     private fun handleSingle(single: Single<AllCharactersContainer>?): Single<List<CharacterRecData>>? {
         val result: Single<List<CharacterRecData>>? =
-            single?.subscribeOn(Schedulers.io())?.flatMap { t -> Single.just(t.results) }
+            single?.subscribeOn(Schedulers.io())?.flatMap { t ->
+                getMaxPage(t)
+                Single.just(t.results) }
                 ?.flatMap { t ->
                     Single.just(
                         transformRepoCharsListInRecCharsList(t)
@@ -49,4 +72,8 @@ class AllCharactersProvider {
     }
 
     fun hasMoreData(): Boolean = currentPageNumber + 1 <= maxPageNumber
+
+    private fun getMaxPage(container: AllCharactersContainer) {
+        maxPageNumber = container.info.pages
+    }
 }

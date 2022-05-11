@@ -6,9 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
@@ -17,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterRecData
+import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.CharacterQuery
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllCharactersViewModel
 import com.squareup.picasso.Picasso
 
@@ -30,6 +29,14 @@ class CharactersListFragment : Fragment() {
     private var hasBottomNavs: HasBottomNavs? = null
     private val picasso = Picasso.get()
     private var recyclerView: RecyclerView? = null
+    private var showFilters: Button? = null
+    private var useFilters: Button? = null
+    private var filterContainer: ViewGroup? = null
+    private var filterName: EditText? = null
+    private var filterSpecies: EditText? = null
+    private var filterType: EditText? = null
+    private var filterStatus: Spinner? = null
+    private var filterGender: Spinner? = null
     private var mainProgressBar: ProgressBar? = null
     private var pagingProgressBar: ProgressBar? = null
     private val viewModel: AllCharactersViewModel by lazy {
@@ -52,6 +59,14 @@ class CharactersListFragment : Fragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_characters_list, container, false)
         recyclerView = v.findViewById(R.id.recyclerCharacters)
+        showFilters = v.findViewById(R.id.filters_button)
+        filterContainer = v.findViewById(R.id.filters_container)
+        filterName = v.findViewById(R.id.edit_name)
+        filterType = v.findViewById(R.id.edit_type)
+        filterSpecies = v.findViewById(R.id.edit_species)
+        filterStatus = v.findViewById(R.id.spinner_status)
+        filterGender = v.findViewById(R.id.spinner_gender)
+        useFilters = v.findViewById(R.id.use_filter)
         mainProgressBar = v.findViewById(R.id.progress_bar)
         pagingProgressBar = v.findViewById(R.id.paging_progress_bar)
         return v
@@ -60,6 +75,7 @@ class CharactersListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         hasBottomNavs?.setButtonsEnabled(this)
+        initSpinners()
         loadingLiveData = viewModel.getLoadingLiveData()
         loadingLiveData?.observe(
             viewLifecycleOwner
@@ -107,11 +123,74 @@ class CharactersListFragment : Fragment() {
                 (recyclerView?.adapter as CharacterAdapter).changeContacts(it)
             }
         }
+        initShowButtonListener()
+        initUseFilterButtonListener()
     }
 
     override fun onDetach() {
         super.onDetach()
         hasBottomNavs = null
+    }
+
+    private fun initSpinners() {
+        val res = requireActivity().resources
+
+        val statuses = res.getStringArray(R.array.status)
+        val statAdapter = ArrayAdapter(
+            requireActivity().baseContext,
+            R.layout.spinner_item,
+            R.id.textValue,
+            statuses
+        )
+        filterStatus?.adapter = statAdapter
+
+        val genders = res.getStringArray(R.array.gender)
+        val gendersAdapter = ArrayAdapter(
+            requireActivity().baseContext,
+            R.layout.spinner_item,
+            R.id.textValue,
+            genders
+        )
+        filterGender?.adapter = gendersAdapter
+    }
+
+    private fun initShowButtonListener() {
+        showFilters?.setOnClickListener { v ->
+            val button = v as Button
+            val show = getString(R.string.show_filters_button)
+            val hide = getString(R.string.hide_filters_button)
+            if (button.text == show) {
+                button.text = hide
+                filterContainer?.visibility = View.VISIBLE
+            } else {
+                button.text = show
+                filterContainer?.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun initUseFilterButtonListener() {
+        useFilters?.setOnClickListener {
+            val name = filterName?.text?.toString()
+            val type = filterType?.text?.toString()
+            val species = filterSpecies?.text?.toString()
+            val gender = null
+            val status = null
+            var query: CharacterQuery? = null
+            if (name?.isBlank() == false
+                || species?.isBlank() == false
+                || type?.isBlank() == false
+            ) {
+                query = CharacterQuery(
+                    name = name,
+                    type = type,
+                    species = species,
+                    gender = null,
+                    status = null
+                )
+            }
+            viewModel.getData(query)
+        }
     }
 
     inner class CharacterAdapter(private var characters: List<CharacterRecData>) :

@@ -23,4 +23,22 @@
     <string name="bot_nav_to_characters">To characters</string>
     <string name="bot_nav_to_locations">To locations</string>
     <string name="bot_nav_to_eps">To episodes</string>
+    <string name="show_filters_button">Show filters</string>
+    <string name="hide_filters_button">Hide filters</string>
+    <string name="filter_name">Name</string>
+    <string name="filter_code">Code</string>
+    <string name="hint_filter_episode_name">Episode name</string>
+    <string name="hint_filter_episode_code">Episode code</string>
+    <string name="button_use_filter">Use filter</string>
+    <string name="filter_type">Type</string>
+    <string name="hint_filter_location_name">Location name</string>
+    <string name="hint_filter_location_type">Location type</string>
+    <string name="filter_dimension">Dimension</string>
+    <string name="hint_filter_location_dimension">Location dimension</string>
+    <string name="filter_species">Species</string>
+    <string name="hint_filter_character_species">Character species</string>
+    <string name="hint_filter_character_type">Character type</string>
+    <string name="hint_filter_character_name">Character name</string>
+    <string name="filter_status">Status</string>
+    <string name="filter_gender">Gender</string>
 </resources>

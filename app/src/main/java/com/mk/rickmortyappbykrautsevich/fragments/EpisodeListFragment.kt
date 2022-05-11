@@ -2,9 +2,12 @@ package com.mk.rickmortyappbykrautsevich.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -16,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeRecData
+import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.EpisodeQuery
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllEpisodesViewModel
 
 class EpisodeListFragment : Fragment() {
@@ -27,6 +31,11 @@ class EpisodeListFragment : Fragment() {
 
     private var hasBottomNavs: HasBottomNavs? = null
     private var recyclerView: RecyclerView? = null
+    private var showFilters: Button? = null
+    private var useFilters: Button? = null
+    private var filterContainer: ViewGroup? = null
+    private var filterName: EditText? = null
+    private var filterCode: EditText? = null
     private var mainProgressBar: ProgressBar? = null
     private var pagingProgressBar: ProgressBar? = null
     private val viewModel: AllEpisodesViewModel by lazy {
@@ -49,6 +58,11 @@ class EpisodeListFragment : Fragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_episode_list, container, false)
         recyclerView = v.findViewById(R.id.recyclerEpisodes)
+        showFilters = v.findViewById(R.id.filters_button)
+        filterContainer = v.findViewById(R.id.filters_container)
+        filterName = v.findViewById(R.id.edit_name)
+        filterCode = v.findViewById(R.id.edit_code)
+        useFilters = v.findViewById(R.id.use_filter)
         mainProgressBar = v.findViewById(R.id.progress_bar)
         pagingProgressBar = v.findViewById(R.id.paging_progress_bar)
         return v
@@ -64,7 +78,11 @@ class EpisodeListFragment : Fragment() {
             loading?.let {
                 if (it) {
                     mainProgressBar?.visibility = View.VISIBLE
-                } else mainProgressBar?.visibility = View.INVISIBLE
+                    recyclerView?.visibility = View.INVISIBLE
+                } else {
+                    mainProgressBar?.visibility = View.INVISIBLE
+                    recyclerView?.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -91,6 +109,7 @@ class EpisodeListFragment : Fragment() {
                     val endHasBeenReached = (lastVisible + 3) >= totalItemCount
                     if (endHasBeenReached) {
                         viewModel.getMoreData()
+                        Log.d("12347", "fragment: endHasBeenReached")
                     }
                 }
             })
@@ -102,11 +121,43 @@ class EpisodeListFragment : Fragment() {
                 (recyclerView?.adapter as EpisodeListFragment.EpisodeAdapter).changeContacts(it)
             }
         }
+        initShowButtonListener()
+        initUseFilterButtonListener()
     }
 
     override fun onDetach() {
         super.onDetach()
         hasBottomNavs = null
+    }
+
+    private fun initShowButtonListener() {
+        showFilters?.setOnClickListener { v ->
+            val button = v as Button
+            val show = getString(R.string.show_filters_button)
+            val hide = getString(R.string.hide_filters_button)
+            if (button.text == show) {
+                button.text = hide
+                filterContainer?.visibility = View.VISIBLE
+            } else {
+                button.text = show
+                filterContainer?.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun initUseFilterButtonListener() {
+        useFilters?.setOnClickListener {
+            val name = filterName?.text?.toString()
+            val code = filterCode?.text?.toString()
+            var query: EpisodeQuery? = null
+            if (name?.isBlank() == false || code?.isBlank() == false) {
+                query = EpisodeQuery(
+                    name = name,
+                    code = code
+                )
+            }
+            viewModel.getData(query)
+        }
     }
 
     inner class EpisodeAdapter(private var episodes: List<EpisodeRecData>) :
