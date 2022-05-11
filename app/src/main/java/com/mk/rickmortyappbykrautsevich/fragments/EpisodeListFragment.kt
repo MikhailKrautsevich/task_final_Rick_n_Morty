@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeRecData
@@ -67,6 +68,8 @@ class EpisodeListFragment : Fragment() {
         useFilters = v.findViewById(R.id.use_filter)
         mainProgressBar = v.findViewById(R.id.progress_bar)
         pagingProgressBar = v.findViewById(R.id.paging_progress_bar)
+
+        initPullToRefresh(v)
         return v
     }
 
@@ -121,7 +124,9 @@ class EpisodeListFragment : Fragment() {
         episodeLiveData?.observe(viewLifecycleOwner) { list ->
             list?.let {
                 (recyclerView?.adapter as EpisodeListFragment.EpisodeAdapter).changeContacts(it)
-                if (it.isNotEmpty()) {showRecycler()} else showNoResults()
+                if (it.isNotEmpty()) {
+                    showRecycler()
+                } else showNoResults()
             }
         }
         initShowButtonListener()
@@ -163,14 +168,22 @@ class EpisodeListFragment : Fragment() {
         }
     }
 
-    private fun showRecycler(){
+    private fun showRecycler() {
         recyclerView?.visibility = View.VISIBLE
         noResults?.visibility = View.INVISIBLE
     }
 
-    private fun showNoResults(){
+    private fun showNoResults() {
         recyclerView?.visibility = View.INVISIBLE
         noResults?.visibility = View.VISIBLE
+    }
+
+    private fun initPullToRefresh(v: View) {
+        val swipe: SwipeRefreshLayout = v.findViewById(R.id.swipe_layout)
+        swipe.setOnRefreshListener {
+            viewModel.getData(null)
+            swipe.isRefreshing = false
+        }
     }
 
     inner class EpisodeAdapter(private var episodes: List<EpisodeRecData>) :

@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
@@ -68,6 +69,8 @@ class LocationListFragment : Fragment() {
         useFilters = v.findViewById(R.id.use_filter)
         mainProgressBar = v.findViewById(R.id.progress_bar)
         pagingProgressBar = v.findViewById(R.id.paging_progress_bar)
+
+        initPullToRefresh(v)
         return v
     }
 
@@ -172,6 +175,14 @@ class LocationListFragment : Fragment() {
     private fun showNoResults(){
         recyclerView?.visibility = View.INVISIBLE
         noResults?.visibility = View.VISIBLE
+    }
+
+    private fun initPullToRefresh(v: View) {
+        val swipe: SwipeRefreshLayout = v.findViewById(R.id.swipe_layout)
+        swipe.setOnRefreshListener {
+            viewModel.getData(null)
+            swipe.isRefreshing = false
+        }
     }
 
     inner class LocationAdapter(private var locs: List<LocationRecData>) :

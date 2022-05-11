@@ -1,144 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray"
-    tools:context=".fragments.EpisodeListFragment">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerEpisodes"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:padding="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/filters_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/holder_episode" />
-
-    <TextView
-        android:id="@+id/no_results_textview"
-        style="@style/NoResultsTextView"
-        android:layout_marginTop="24dp"
-        android:text="@string/no_results_found_textview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/recyclerEpisodes"
-        android:visibility="invisible"/>
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@id/recyclerEpisodes"
-        app:layout_constraintEnd_toEndOf="@id/recyclerEpisodes"
-        app:layout_constraintStart_toStartOf="@id/recyclerEpisodes"
-        app:layout_constraintTop_toTopOf="@id/recyclerEpisodes" />
-
-    <ProgressBar
-        android:id="@id/paging_progress_bar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/filters_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/filters_button" />
-
-    <Button
-        android:id="@+id/filters_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:text="@string/show_filters_button"
-        app:layout_constraintBottom_toTopOf="@id/barrier"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recyclerEpisodes" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/filters_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filters_button" />
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/filters_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="4dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/barrier">
+        android:layout_height="match_parent"
+        android:background="@color/gray"
+        tools:context=".fragments.EpisodeListFragment">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerEpisodes"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:padding="4dp"
+            app:layout_constraintBottom_toTopOf="@+id/filters_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/holder_episode" />
+
+        <TextView
+            android:id="@+id/no_results_textview"
+            style="@style/NoResultsTextView"
+            android:layout_marginTop="24dp"
+            android:text="@string/no_results_found_textview"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/recyclerEpisodes" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.35" />
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/recyclerEpisodes"
+            app:layout_constraintEnd_toEndOf="@id/recyclerEpisodes"
+            app:layout_constraintStart_toStartOf="@id/recyclerEpisodes"
+            app:layout_constraintTop_toTopOf="@id/recyclerEpisodes" />
 
-        <TextView
-            android:id="@+id/filter_name"
-            style="@style/TextViewOfFilter.TextView"
-            android:text="@string/filter_name"
-            app:layout_constraintEnd_toEndOf="@id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/filters_container" />
-
-        <TextView
-            android:id="@+id/filter_episode"
-            style="@style/TextViewOfFilter.TextView"
-            android:text="@string/filter_code"
-            app:layout_constraintBottom_toTopOf="@id/use_filter"
-            app:layout_constraintEnd_toEndOf="@id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filter_name" />
-
-        <EditText
-            android:id="@+id/edit_name"
-            style="@style/TextViewOfFilter.EditText"
-            android:hint="@string/hint_filter_episode_name"
-            android:inputType="text"
-            app:layout_constraintBottom_toBottomOf="@id/filter_name"
+        <ProgressBar
+            android:id="@id/paging_progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/filters_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="@id/filter_name" />
-
-        <EditText
-            android:id="@+id/edit_code"
-            style="@style/TextViewOfFilter.EditText"
-            android:hint="@string/hint_filter_episode_code"
-            android:inputType="text"
-            app:layout_constraintBottom_toBottomOf="@id/filter_episode"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/guideline"
-            app:layout_constraintTop_toTopOf="@id/filter_episode" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/filters_button" />
 
         <Button
-            android:id="@+id/use_filter"
-            android:layout_width="0dp"
+            android:id="@+id/filters_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:text="@string/button_use_filter"
-            android:textSize="20sp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/show_filters_button"
+            app:layout_constraintBottom_toTopOf="@id/barrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerEpisodes" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/filters_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filters_button" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/filters_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="4dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/barrier">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.35" />
+
+            <TextView
+                android:id="@+id/filter_name"
+                style="@style/TextViewOfFilter.TextView"
+                android:text="@string/filter_name"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/filters_container" />
+
+            <TextView
+                android:id="@+id/filter_episode"
+                style="@style/TextViewOfFilter.TextView"
+                android:text="@string/filter_code"
+                app:layout_constraintBottom_toTopOf="@id/use_filter"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filter_name" />
+
+            <EditText
+                android:id="@+id/edit_name"
+                style="@style/TextViewOfFilter.EditText"
+                android:hint="@string/hint_filter_episode_name"
+                android:inputType="text"
+                app:layout_constraintBottom_toBottomOf="@id/filter_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/filter_name" />
+
+            <EditText
+                android:id="@+id/edit_code"
+                style="@style/TextViewOfFilter.EditText"
+                android:hint="@string/hint_filter_episode_code"
+                android:inputType="text"
+                app:layout_constraintBottom_toBottomOf="@id/filter_episode"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/filter_episode" />
+
+            <Button
+                android:id="@+id/use_filter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/button_use_filter"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
