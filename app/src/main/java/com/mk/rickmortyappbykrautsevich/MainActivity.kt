@@ -2,10 +2,8 @@ package com.mk.rickmortyappbykrautsevich
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-//import android.util.Log
-//import android.view.MenuItem
+import android.view.MenuItem
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -13,7 +11,7 @@ import com.mk.rickmortyappbykrautsevich.fragments.CharactersListFragment
 import com.mk.rickmortyappbykrautsevich.fragments.EpisodeListFragment
 import com.mk.rickmortyappbykrautsevich.fragments.LocationListFragment
 
-class MainActivity : AppCompatActivity(), HasBottomNavs {
+class MainActivity : AppCompatActivity(), HasBottomNavs, FragmentHost {
 
     private var bottomNavigationView: BottomNavigationView? = null
     private var intTag: Int = 0
@@ -66,18 +64,18 @@ class MainActivity : AppCompatActivity(), HasBottomNavs {
         }
     }
 
-    private fun setFragment(fragment: Fragment) {
+    override fun setFragment(fragment: Fragment) {
         val tag = intTag.toString()
         intTag++
         supportFragmentManager.beginTransaction().run {
             replace(R.id.fragment_container, fragment, tag)
             addToBackStack(tag).commit()
         }
-//        initGoBackArrow()
     }
 
     override fun setButtonsEnabled(fragment: Fragment) {
         makeAllNavButtonsEnabled()
+        initGoBackArrow()
         when (fragment::class.java.simpleName) {
             CharactersListFragment::class.java.simpleName -> {
                 navBtnToCharacters?.let {
@@ -116,24 +114,28 @@ class MainActivity : AppCompatActivity(), HasBottomNavs {
     }
 
     private fun setNoCheckedNavButtons() {
-        for (i in 0 until bottomNavigationView?.menu?.size!!) {
-            bottomNavigationView?.menu?.getItem(i)?.isChecked = false
+        val menu = bottomNavigationView?.menu
+        menu?.let {
+            it.setGroupCheckable(0, true, false)
+            for (i in 0 until it.size()) {
+                it.getItem(i).isChecked = false
+            }
+            it.setGroupCheckable(0, true, true)
         }
     }
 
-//    private fun initGoBackArrow() {
-//        val transactionCount = supportFragmentManager.backStackEntryCount
-//        Log.d("11111", transactionCount.toString())
-//        val trCountIsMoreThanZero = transactionCount > -1
-//        supportActionBar?.setDisplayHomeAsUpEnabled(trCountIsMoreThanZero)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        if (item.itemId == android.R.id.home) {
-//            supportFragmentManager.popBackStack()
-//            initGoBackArrow()
-//            return true
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
+    private fun initGoBackArrow() {
+        val transactionCount = supportFragmentManager.backStackEntryCount
+        val trCountIsMoreThanZero = transactionCount > 0
+        supportActionBar?.setDisplayHomeAsUpEnabled(trCountIsMoreThanZero)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            supportFragmentManager.popBackStack()
+            initGoBackArrow()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

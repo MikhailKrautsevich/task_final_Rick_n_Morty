@@ -19,6 +19,8 @@ open class BaseViewModel : ViewModel() {
 
     fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
 
+    fun getData(id: Int) {}
+
     // Метод для обработки ошибок, метод нужно вызвать при полном отсутствии данных.
     private fun postEmptyData() {
         loadingLiveData.postValue(false)

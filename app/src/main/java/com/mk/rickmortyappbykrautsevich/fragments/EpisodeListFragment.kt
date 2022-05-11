@@ -17,9 +17,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.mk.rickmortyappbykrautsevich.FragmentHost
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeRecData
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeData
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.EpisodeQuery
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllEpisodesViewModel
 
@@ -31,6 +32,8 @@ class EpisodeListFragment : Fragment() {
     }
 
     private var hasBottomNavs: HasBottomNavs? = null
+    private var fragmentHost: FragmentHost? = null
+
     private var recyclerView: RecyclerView? = null
     private var noResults: TextView? = null
     private var showFilters: Button? = null
@@ -46,12 +49,14 @@ class EpisodeListFragment : Fragment() {
 
     private var loadingLiveData: LiveData<Boolean>? = null
     private var pagingLiveData: LiveData<Boolean>? = null
-    private var episodeLiveData: LiveData<List<EpisodeRecData>>? = null
+    private var episodeLiveData: LiveData<List<EpisodeData>>? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is HasBottomNavs)
             hasBottomNavs = context
+        if (context is FragmentHost)
+            fragmentHost = context
     }
 
     override fun onCreateView(
@@ -186,7 +191,7 @@ class EpisodeListFragment : Fragment() {
         }
     }
 
-    inner class EpisodeAdapter(private var episodes: List<EpisodeRecData>) :
+    inner class EpisodeAdapter(private var episodes: List<EpisodeData>) :
         RecyclerView.Adapter<EpisodeAdapter.EpisodeHolder>() {
 
         override fun onCreateViewHolder(
@@ -204,8 +209,8 @@ class EpisodeListFragment : Fragment() {
 
         override fun getItemCount(): Int = episodes.size
 
-        fun changeContacts(list: List<EpisodeRecData>) {
-            val new = ArrayList<EpisodeRecData>()
+        fun changeContacts(list: List<EpisodeData>) {
+            val new = ArrayList<EpisodeData>()
             new.addAll(list)
             val old = episodes
             val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = new)
@@ -214,32 +219,33 @@ class EpisodeListFragment : Fragment() {
             result.dispatchUpdatesTo(this)
         }
 
-        inner class EpisodeHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-            View.OnClickListener {
+        inner class EpisodeHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             private val nameTextView: TextView = itemView.findViewById(R.id.ep_name_textview)
             private val numberTextView: TextView = itemView.findViewById(R.id.ep_number_textview)
             private val dateTextView: TextView = itemView.findViewById(R.id.ep_air_date_textview)
-            private var episodeBound: EpisodeRecData? = null
+            private var episodeBound: EpisodeData? = null
 
             init {
-                itemView.setOnClickListener { this }
+                itemView.setOnClickListener {
+                    val fragment =
+                        episodeBound?.id?.let { EpisodeDetailFragment.newInstance(it) }
+                    fragment?.let {
+                        fragmentHost?.setFragment(it)
+                    }
+                }
             }
 
-            fun bind(episode: EpisodeRecData) {
+            fun bind(episode: EpisodeData) {
                 episodeBound = episode
                 nameTextView.text = episode.name
                 numberTextView.text = episode.episode
                 dateTextView.text = episode.airDate
             }
-
-            override fun onClick(p0: View?) {
-                TODO("Not yet implemented")
-            }
         }
 
         inner class ContactDiffUtilCallBack(
-            private val oldList: List<EpisodeRecData>,
-            private val newList: List<EpisodeRecData>
+            private val oldList: List<EpisodeData>,
+            private val newList: List<EpisodeData>
         ) : DiffUtil.Callback() {
             override fun getOldListSize() = oldList.size
 

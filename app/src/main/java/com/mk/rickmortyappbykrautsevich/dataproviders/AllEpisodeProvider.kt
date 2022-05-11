@@ -1,7 +1,7 @@
 package com.mk.rickmortyappbykrautsevich.dataproviders
 
 import android.util.Log
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeRecData
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeData
 import com.mk.rickmortyappbykrautsevich.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.retrofit.api.GetEpisodesApi
 import com.mk.rickmortyappbykrautsevich.retrofit.models.AllEpisodesContainer
@@ -23,7 +23,7 @@ class AllEpisodeProvider {
         api = RetrofitHelper.getEpsApi(retrofit)
     }
 
-    fun loadEpisodes(query: EpisodeQuery?): Single<List<EpisodeRecData>>? {
+    fun loadEpisodes(query: EpisodeQuery?): Single<List<EpisodeData>>? {
         currentPageNumber = 1
         currentQuery = query
         val single: Single<AllEpisodesContainer>? = if (query == null) {
@@ -35,7 +35,7 @@ class AllEpisodeProvider {
         return handleSingle(single)
     }
 
-    fun loadNewPage(): Single<List<EpisodeRecData>>? {
+    fun loadNewPage(): Single<List<EpisodeData>>? {
         return if (hasMoreData()) {
             Log.d("12347", "Provider $maxPageNumber $currentQuery")
             val single = api?.getEpisodes(
@@ -47,8 +47,8 @@ class AllEpisodeProvider {
         } else Single.just(emptyList())
     }
 
-    private fun handleSingle(single: Single<AllEpisodesContainer>?): Single<List<EpisodeRecData>>? {
-        val result: Single<List<EpisodeRecData>>? =
+    private fun handleSingle(single: Single<AllEpisodesContainer>?): Single<List<EpisodeData>>? {
+        val result: Single<List<EpisodeData>>? =
             single?.subscribeOn(Schedulers.io())?.flatMap { t ->
                 getMaxPage(t)
                 Single.just(t.results)
@@ -61,9 +61,9 @@ class AllEpisodeProvider {
         return result
     }
 
-    private fun transformRepoEpsListInRecEpsList(list: List<EpisodeRetrofitModel>?): List<EpisodeRecData> {
-        val l = ArrayList<EpisodeRecData>()
-        list?.forEach { l.add(EpisodeRecData(it)) }
+    private fun transformRepoEpsListInRecEpsList(list: List<EpisodeRetrofitModel>?): List<EpisodeData> {
+        val l = ArrayList<EpisodeData>()
+        list?.forEach { l.add(EpisodeData(it)) }
         return l
     }
 

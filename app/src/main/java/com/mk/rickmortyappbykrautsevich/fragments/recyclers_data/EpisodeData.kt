@@ -2,7 +2,7 @@ package com.mk.rickmortyappbykrautsevich.fragments.recyclers_data
 
 import com.mk.rickmortyappbykrautsevich.retrofit.models.EpisodeRetrofitModel
 
-data class EpisodeRecData(
+data class EpisodeData(
     var id: Int = 0,
     var name: String?,
     var episode: String?,
@@ -11,6 +11,17 @@ data class EpisodeRecData(
     var created: String?,
     var characters: List<String>?
 ) {
+
+    constructor() : this(
+        id = -1,
+        name = "",
+        episode = "",
+        airDate = "",
+        url = "",
+        created = "",
+        characters = ArrayList<String>()
+    )
+
     constructor(ep: EpisodeRetrofitModel) : this(
         id = ep.id,
         name = ep.name,
@@ -21,3 +32,4 @@ data class EpisodeRecData(
         characters = ep.characters
     )
 }
+
