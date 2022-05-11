@@ -2,6 +2,7 @@ package com.mk.rickmortyappbykrautsevich.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
+import com.mk.rickmortyappbykrautsevich.enums.Gender
+import com.mk.rickmortyappbykrautsevich.enums.Status
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterRecData
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.CharacterQuery
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllCharactersViewModel
@@ -37,6 +40,8 @@ class CharactersListFragment : Fragment() {
     private var filterType: EditText? = null
     private var filterStatus: Spinner? = null
     private var filterGender: Spinner? = null
+    private var filterStatusPos: Int = -1
+    private var filterGenderPos: Int = -1
     private var mainProgressBar: ProgressBar? = null
     private var pagingProgressBar: ProgressBar? = null
     private val viewModel: AllCharactersViewModel by lazy {
@@ -152,6 +157,26 @@ class CharactersListFragment : Fragment() {
             genders
         )
         filterGender?.adapter = gendersAdapter
+
+        filterStatus?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                filterStatusPos = p2
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
+
+        filterGender?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                filterGenderPos = p2
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
     }
 
     private fun initShowButtonListener() {
@@ -174,20 +199,30 @@ class CharactersListFragment : Fragment() {
             val name = filterName?.text?.toString()
             val type = filterType?.text?.toString()
             val species = filterSpecies?.text?.toString()
-            val gender = null
-            val status = null
+            var gender: Gender? = null
+            if (filterGenderPos in 1..4) {
+                gender = Gender.fromInt(filterGenderPos)
+            }
+            var status: Status? = null
+            if (filterStatusPos in 1..3) {
+                status = Status.fromInt(filterStatusPos)
+            }
             var query: CharacterQuery? = null
             if (name?.isBlank() == false
                 || species?.isBlank() == false
                 || type?.isBlank() == false
+                || gender == null
+                || status == null
             ) {
                 query = CharacterQuery(
                     name = name,
                     type = type,
                     species = species,
-                    gender = null,
-                    status = null
+                    gender = gender?.name,
+                    status = status?.name
                 )
+                Log.d("12345", query.gender.toString())
+                Log.d("12345", query.status.toString())
             }
             viewModel.getData(query)
         }
