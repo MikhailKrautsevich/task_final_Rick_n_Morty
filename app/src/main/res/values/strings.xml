@@ -41,4 +41,5 @@
     <string name="hint_filter_character_name">Character name</string>
     <string name="filter_status">Status</string>
     <string name="filter_gender">Gender</string>
+    <string name="no_results_found_textview">No results found</string>
 </resources>

@@ -32,6 +32,7 @@ class CharactersListFragment : Fragment() {
     private var hasBottomNavs: HasBottomNavs? = null
     private val picasso = Picasso.get()
     private var recyclerView: RecyclerView? = null
+    private var noResults: TextView? = null
     private var showFilters: Button? = null
     private var useFilters: Button? = null
     private var filterContainer: ViewGroup? = null
@@ -64,6 +65,7 @@ class CharactersListFragment : Fragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_characters_list, container, false)
         recyclerView = v.findViewById(R.id.recyclerCharacters)
+        noResults = v.findViewById(R.id.no_results_textview)
         showFilters = v.findViewById(R.id.filters_button)
         filterContainer = v.findViewById(R.id.filters_container)
         filterName = v.findViewById(R.id.edit_name)
@@ -126,6 +128,7 @@ class CharactersListFragment : Fragment() {
         ) { list ->
             list?.let {
                 (recyclerView?.adapter as CharacterAdapter).changeContacts(it)
+                if (it.isNotEmpty()) {showRecycler()} else showNoResults()
             }
         }
         initShowButtonListener()
@@ -226,6 +229,16 @@ class CharactersListFragment : Fragment() {
             }
             viewModel.getData(query)
         }
+    }
+
+    private fun showRecycler(){
+        recyclerView?.visibility = View.VISIBLE
+        noResults?.visibility = View.INVISIBLE
+    }
+
+    private fun showNoResults(){
+        recyclerView?.visibility = View.INVISIBLE
+        noResults?.visibility = View.VISIBLE
     }
 
     inner class CharacterAdapter(private var characters: List<CharacterRecData>) :

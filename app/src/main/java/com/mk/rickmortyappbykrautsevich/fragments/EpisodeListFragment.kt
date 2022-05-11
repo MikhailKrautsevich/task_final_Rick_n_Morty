@@ -31,6 +31,7 @@ class EpisodeListFragment : Fragment() {
 
     private var hasBottomNavs: HasBottomNavs? = null
     private var recyclerView: RecyclerView? = null
+    private var noResults: TextView? = null
     private var showFilters: Button? = null
     private var useFilters: Button? = null
     private var filterContainer: ViewGroup? = null
@@ -58,6 +59,7 @@ class EpisodeListFragment : Fragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_episode_list, container, false)
         recyclerView = v.findViewById(R.id.recyclerEpisodes)
+        noResults = v.findViewById(R.id.no_results_textview)
         showFilters = v.findViewById(R.id.filters_button)
         filterContainer = v.findViewById(R.id.filters_container)
         filterName = v.findViewById(R.id.edit_name)
@@ -119,6 +121,7 @@ class EpisodeListFragment : Fragment() {
         episodeLiveData?.observe(viewLifecycleOwner) { list ->
             list?.let {
                 (recyclerView?.adapter as EpisodeListFragment.EpisodeAdapter).changeContacts(it)
+                if (it.isNotEmpty()) {showRecycler()} else showNoResults()
             }
         }
         initShowButtonListener()
@@ -158,6 +161,16 @@ class EpisodeListFragment : Fragment() {
             }
             viewModel.getData(query)
         }
+    }
+
+    private fun showRecycler(){
+        recyclerView?.visibility = View.VISIBLE
+        noResults?.visibility = View.INVISIBLE
+    }
+
+    private fun showNoResults(){
+        recyclerView?.visibility = View.INVISIBLE
+        noResults?.visibility = View.VISIBLE
     }
 
     inner class EpisodeAdapter(private var episodes: List<EpisodeRecData>) :

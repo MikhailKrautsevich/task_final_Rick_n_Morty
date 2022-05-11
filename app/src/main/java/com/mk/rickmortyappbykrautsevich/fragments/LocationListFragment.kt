@@ -30,6 +30,7 @@ class LocationListFragment : Fragment() {
 
     private var hasBottomNavs: HasBottomNavs? = null
     private var recyclerView: RecyclerView? = null
+    private var noResults: TextView? = null
     private var showFilters: Button? = null
     private var useFilters: Button? = null
     private var filterContainer: ViewGroup? = null
@@ -58,6 +59,7 @@ class LocationListFragment : Fragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_location_list, container, false)
         recyclerView = v.findViewById(R.id.recyclerLocations)
+        noResults = v.findViewById(R.id.no_results_textview)
         showFilters = v.findViewById(R.id.filters_button)
         filterContainer = v.findViewById(R.id.filters_container)
         filterName = v.findViewById(R.id.edit_name)
@@ -115,6 +117,7 @@ class LocationListFragment : Fragment() {
         locationsLiveData?.observe(viewLifecycleOwner) { list ->
             list?.let {
                 (recyclerView?.adapter as LocationAdapter).changeData(it)
+                if (it.isNotEmpty()) {showRecycler()} else showNoResults()
             }
         }
         initShowButtonListener()
@@ -159,6 +162,16 @@ class LocationListFragment : Fragment() {
             }
             viewModel.getData(query)
         }
+    }
+
+    private fun showRecycler(){
+        recyclerView?.visibility = View.VISIBLE
+        noResults?.visibility = View.INVISIBLE
+    }
+
+    private fun showNoResults(){
+        recyclerView?.visibility = View.INVISIBLE
+        noResults?.visibility = View.VISIBLE
     }
 
     inner class LocationAdapter(private var locs: List<LocationRecData>) :
