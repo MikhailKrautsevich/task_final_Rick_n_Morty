@@ -11,4 +11,9 @@ interface GetTheEpisodeApi {
     fun getEpisode(
         @Path("id") id: Int
     ): Single<EpisodeRetrofitModel>
+
+    @GET(value = "episode/{array}")
+    fun getList(
+        @Path("array") array: String
+    ): Single<List<EpisodeRetrofitModel>>
 }

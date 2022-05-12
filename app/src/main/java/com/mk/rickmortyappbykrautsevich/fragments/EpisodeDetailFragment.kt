@@ -10,13 +10,17 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mk.rickmortyappbykrautsevich.FragmentHost
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers.CharacterAdapter
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeData
 import com.mk.rickmortyappbykrautsevich.viewmodels.EpisodeDetailViewModel
+import com.squareup.picasso.Picasso
 
 class EpisodeDetailFragment : Fragment() {
 
@@ -34,10 +38,11 @@ class EpisodeDetailFragment : Fragment() {
     }
 
     private var hasBottomNavs: HasBottomNavs? = null
-    private var fragmentHost: FragmentHost? = null
+    private var host: FragmentHost? = null
 
     private var recyclerView: RecyclerView? = null
     private var mainProgressBar: ProgressBar? = null
+    private var listProgressBar: ProgressBar? = null
 
     private var nameTV: TextView? = null
     private var codeTV: TextView? = null
@@ -51,15 +56,17 @@ class EpisodeDetailFragment : Fragment() {
     }
     private var epId = 0
 
-    private var episodeLiveData : LiveData<EpisodeData>? = null
-    private var loadingLiveData : LiveData<Boolean>? = null
+    private var episodeLiveData: LiveData<EpisodeData>? = null
+    private var epLoadingLiveData: LiveData<Boolean>? = null
+    private var listLoadingLiveData: LiveData<Boolean>? = null
+    private var listLiveData: LiveData<List<CharacterData>>? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is HasBottomNavs)
             hasBottomNavs = context
         if (context is FragmentHost)
-            fragmentHost = context
+            host = context
     }
 
     override fun onCreateView(
@@ -71,6 +78,7 @@ class EpisodeDetailFragment : Fragment() {
 
         recyclerView = v.findViewById(R.id.recycler)
         mainProgressBar = v.findViewById(R.id.progress_bar)
+        listProgressBar = v.findViewById(R.id.list_progress_bar)
 
         nameTV = v.findViewById(R.id.value_name_textview)
         codeTV = v.findViewById(R.id.value_code_textview)
@@ -86,31 +94,44 @@ class EpisodeDetailFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         hasBottomNavs?.setButtonsEnabled(this)
+
+        recyclerView?.let {
+            it.layoutManager = LinearLayoutManager(requireActivity())
+            val list: ArrayList<CharacterData> = ArrayList()
+            it.adapter = CharacterAdapter(list, Picasso.get(), host)
+            it.visibility = View.INVISIBLE
+        }
+
         arguments?.let {
             epId = getEpId(it)
         }
         viewModel.loadData(epId)
 
-        loadingLiveData = viewModel.getLoadingLiveData()
-        loadingLiveData?.observe(viewLifecycleOwner) { t ->
+        epLoadingLiveData = viewModel.getEpLoadingLiveData()
+        epLoadingLiveData?.observe(viewLifecycleOwner) { t ->
             if (t == true) {
                 mainProgressBar?.visibility = View.VISIBLE
             } else mainProgressBar?.visibility = View.INVISIBLE
         }
 
         episodeLiveData = viewModel.getEpisodeLiveData()
-        episodeLiveData?.observe(viewLifecycleOwner
+        episodeLiveData?.observe(
+            viewLifecycleOwner
         ) { t ->
             t?.let {
                 setData(it)
             }
         }
+
+        listLoadingLiveData = viewModel.getListLoadingLiveData()
+
+        listLiveData = viewModel.getListLiveData()
     }
 
     override fun onDetach() {
         super.onDetach()
         hasBottomNavs = null
-        fragmentHost = null
+        host = null
     }
 
     private fun initPullToRefresh(v: View) {

@@ -21,14 +21,18 @@ class EpisodeDetailProvider {
         return handleSingle(single)
     }
 
+//    fun loadList(array: Array<Int>): Single<List<EpisodeData>>{
+//        val single = api?.getList(array.toString())
+//    }
+
     private fun handleSingle(single: Single<EpisodeRetrofitModel>?): Single<EpisodeData>? {
-        val result = single?.subscribeOn(Schedulers.io())?.flatMap {
-            it -> Single.just(transform(it))
+        val result = single?.subscribeOn(Schedulers.io())?.flatMap { it ->
+            Single.just(transform(it))
         }?.subscribeOn(Schedulers.computation())
         return result
     }
 
-    private fun transform(ep: EpisodeRetrofitModel) : EpisodeData {
+    private fun transform(ep: EpisodeRetrofitModel): EpisodeData {
         return EpisodeData(ep)
     }
 }

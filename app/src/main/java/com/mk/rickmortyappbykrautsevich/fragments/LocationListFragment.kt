@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.mk.rickmortyappbykrautsevich.FragmentHost
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers.LocationAdapter
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.LocationQuery
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllLocationViewModel
@@ -30,6 +32,7 @@ class LocationListFragment : Fragment() {
     }
 
     private var hasBottomNavs: HasBottomNavs? = null
+    private var host: FragmentHost? = null
     private var recyclerView: RecyclerView? = null
     private var noResults: TextView? = null
     private var showFilters: Button? = null
@@ -52,6 +55,8 @@ class LocationListFragment : Fragment() {
         super.onAttach(context)
         if (context is HasBottomNavs)
             hasBottomNavs = context
+        if (context is FragmentHost)
+            host = context
     }
 
     override fun onCreateView(
@@ -115,12 +120,14 @@ class LocationListFragment : Fragment() {
                 }
             })
 
-            adapter = LocationAdapter(ArrayList())
+            adapter = LocationAdapter(ArrayList(), host)
         }
         locationsLiveData?.observe(viewLifecycleOwner) { list ->
             list?.let {
                 (recyclerView?.adapter as LocationAdapter).changeData(it)
-                if (it.isNotEmpty()) {showRecycler()} else showNoResults()
+                if (it.isNotEmpty()) {
+                    showRecycler()
+                } else showNoResults()
             }
         }
         initShowButtonListener()
@@ -130,6 +137,7 @@ class LocationListFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         hasBottomNavs = null
+        host = null
     }
 
     private fun initShowButtonListener() {
@@ -167,12 +175,12 @@ class LocationListFragment : Fragment() {
         }
     }
 
-    private fun showRecycler(){
+    private fun showRecycler() {
         recyclerView?.visibility = View.VISIBLE
         noResults?.visibility = View.INVISIBLE
     }
 
-    private fun showNoResults(){
+    private fun showNoResults() {
         recyclerView?.visibility = View.INVISIBLE
         noResults?.visibility = View.VISIBLE
     }
@@ -182,75 +190,6 @@ class LocationListFragment : Fragment() {
         swipe.setOnRefreshListener {
             viewModel.getData(null)
             swipe.isRefreshing = false
-        }
-    }
-
-    inner class LocationAdapter(private var locs: List<LocationRecData>) :
-        RecyclerView.Adapter<LocationAdapter.LocationHolder>() {
-
-        override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
-        ): LocationAdapter.LocationHolder {
-            val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.holder_location, parent, false)
-            return LocationHolder(itemView)
-        }
-
-        override fun onBindViewHolder(holder: LocationAdapter.LocationHolder, position: Int) {
-            holder.bind(locs[position])
-        }
-
-        override fun getItemCount(): Int = locs.size
-
-        fun changeData(list: List<LocationRecData>) {
-            val new = ArrayList<LocationRecData>()
-            new.addAll(list)
-            val old = locs
-            val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = new)
-            val result = DiffUtil.calculateDiff(diffUtilCallback, false)
-            locs = new
-            result.dispatchUpdatesTo(this)
-        }
-
-        inner class LocationHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-            View.OnClickListener {
-            private val locNameTextView: TextView = itemView.findViewById(R.id.loc_name_textview)
-            private val locTypeTextView: TextView = itemView.findViewById(R.id.loc_type_textview)
-            private val locDimenTextView: TextView = itemView.findViewById(R.id.loc_dimen_textview)
-            private var locBound: LocationRecData? = null
-
-            init {
-                itemView.setOnClickListener { this }
-            }
-
-            fun bind(loc: LocationRecData) {
-                locBound = loc
-                locNameTextView.text = loc.name
-                locTypeTextView.text = loc.type
-                locDimenTextView.text = loc.dimension
-            }
-
-            override fun onClick(p0: View?) {
-                TODO("Not yet implemented")
-            }
-
-        }
-
-        inner class ContactDiffUtilCallBack(
-            private val oldList: List<LocationRecData>,
-            private val newList: List<LocationRecData>
-        ) : DiffUtil.Callback() {
-            override fun getOldListSize() = oldList.size
-
-            override fun getNewListSize() = newList.size
-
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-                (oldList[oldItemPosition].id == newList[newItemPosition].id)
-
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return oldList[oldItemPosition] == newList[newItemPosition]
-            }
         }
     }
 }

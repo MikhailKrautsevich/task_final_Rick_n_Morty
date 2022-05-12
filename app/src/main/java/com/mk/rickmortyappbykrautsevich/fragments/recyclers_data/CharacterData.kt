@@ -2,7 +2,7 @@ package com.mk.rickmortyappbykrautsevich.fragments.recyclers_data
 
 import com.mk.rickmortyappbykrautsevich.retrofit.models.CharacterRetrofitModel
 
-data class CharacterRecData(
+data class CharacterData(
     var id: Int = 0,
     var name: String?,
     var species: String?,

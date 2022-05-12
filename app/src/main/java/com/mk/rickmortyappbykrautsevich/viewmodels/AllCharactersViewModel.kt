@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mk.rickmortyappbykrautsevich.dataproviders.AllCharactersProvider
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterRecData
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.CharacterQuery
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
@@ -13,11 +13,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class AllCharactersViewModel : ViewModel() {
 
     private val dataProvider: AllCharactersProvider = AllCharactersProvider()
-    private val listLiveData: MutableLiveData<List<CharacterRecData>> = MutableLiveData()
+    private val listLiveData: MutableLiveData<List<CharacterData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
-    private var charactersList: ArrayList<CharacterRecData> = ArrayList()
+    private var charactersList: ArrayList<CharacterData> = ArrayList()
     private val compositeDisposable = CompositeDisposable()
 
     private var currentQuery: CharacterQuery? = null
@@ -35,7 +35,7 @@ class AllCharactersViewModel : ViewModel() {
 
     fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
 
-    fun getCharactersList() = listLiveData as LiveData<List<CharacterRecData>>
+    fun getCharactersList() = listLiveData as LiveData<List<CharacterData>>
 
     fun getData(query: CharacterQuery?){
         // при true ProgressBar виден
@@ -45,8 +45,8 @@ class AllCharactersViewModel : ViewModel() {
         val single = dataProvider.loadCharacters(query)
         single?.let {
             val disposable = it.observeOn(Schedulers.newThread())
-                .subscribeWith(object : DisposableSingleObserver<List<CharacterRecData>>() {
-                    override fun onSuccess(t: List<CharacterRecData>) {
+                .subscribeWith(object : DisposableSingleObserver<List<CharacterData>>() {
+                    override fun onSuccess(t: List<CharacterData>) {
                         addSynchronized(t)
                         loadingLiveData.postValue(false)
                     }
@@ -67,8 +67,8 @@ class AllCharactersViewModel : ViewModel() {
             val single = dataProvider.loadNewPage()
             single?.let {
                 val disposable = it.observeOn(Schedulers.newThread())
-                    .subscribeWith(object : DisposableSingleObserver<List<CharacterRecData>>() {
-                        override fun onSuccess(t: List<CharacterRecData>) {
+                    .subscribeWith(object : DisposableSingleObserver<List<CharacterData>>() {
+                        override fun onSuccess(t: List<CharacterData>) {
                             addSynchronized(t)
                             paginationLiveData.postValue(false)
                         }
@@ -85,11 +85,11 @@ class AllCharactersViewModel : ViewModel() {
 
     private fun postEmptyList() {
         loadingLiveData.postValue(false)
-        listLiveData.postValue(ArrayList<CharacterRecData>() as List<CharacterRecData>)
+        listLiveData.postValue(ArrayList<CharacterData>() as List<CharacterData>)
     }
 
     @Synchronized
-    private fun addSynchronized(list: List<CharacterRecData>) {
+    private fun addSynchronized(list: List<CharacterData>) {
         charactersList.addAll(list)
         charactersList.sortBy { it.id }
         listLiveData.postValue(charactersList)

@@ -1,6 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.dataproviders
 
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterRecData
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.retrofit.api.GetCharactersApi
 import com.mk.rickmortyappbykrautsevich.retrofit.models.AllCharactersContainer
@@ -23,7 +23,7 @@ class AllCharactersProvider {
         api = RetrofitHelper.getCharsApi(retrofit)
     }
 
-    fun loadCharacters(query: CharacterQuery?): Single<List<CharacterRecData>>? {
+    fun loadCharacters(query: CharacterQuery?): Single<List<CharacterData>>? {
         currentPageNumber = 1
         currentQuery = query
         val single: Single<AllCharactersContainer>? = if (query == null) {
@@ -38,7 +38,7 @@ class AllCharactersProvider {
         return handleSingle(single)
     }
 
-    fun loadNewPage(): Single<List<CharacterRecData>>? {
+    fun loadNewPage(): Single<List<CharacterData>>? {
         return if (hasMoreData()) {
             val single = api?.getCharacters(
                 page = ++currentPageNumber,
@@ -52,11 +52,12 @@ class AllCharactersProvider {
         } else Single.just(emptyList())
     }
 
-    private fun handleSingle(single: Single<AllCharactersContainer>?): Single<List<CharacterRecData>>? {
-        val result: Single<List<CharacterRecData>>? =
+    private fun handleSingle(single: Single<AllCharactersContainer>?): Single<List<CharacterData>>? {
+        val result: Single<List<CharacterData>>? =
             single?.subscribeOn(Schedulers.io())?.flatMap { t ->
                 getMaxPage(t)
-                Single.just(t.results) }
+                Single.just(t.results)
+            }
                 ?.flatMap { t ->
                     Single.just(
                         transformRepoCharsListInRecCharsList(t)
@@ -65,9 +66,9 @@ class AllCharactersProvider {
         return result
     }
 
-    private fun transformRepoCharsListInRecCharsList(list: List<CharacterRetrofitModel>): List<CharacterRecData> {
-        val l = ArrayList<CharacterRecData>()
-        list.forEach { l.add(CharacterRecData(it)) }
+    private fun transformRepoCharsListInRecCharsList(list: List<CharacterRetrofitModel>): List<CharacterData> {
+        val l = ArrayList<CharacterData>()
+        list.forEach { l.add(CharacterData(it)) }
         return l
     }
 

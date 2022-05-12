@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mk.rickmortyappbykrautsevich.dataproviders.EpisodeDetailProvider
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
@@ -15,6 +16,8 @@ class EpisodeDetailViewModel : ViewModel() {
 
     private val episodeLiveData: MutableLiveData<EpisodeData> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private var listLoadingLiveData: LiveData<Boolean> = MutableLiveData()
+    private var listLiveData: LiveData<List<CharacterData>> = MutableLiveData()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -23,9 +26,13 @@ class EpisodeDetailViewModel : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
+    fun getEpLoadingLiveData() = loadingLiveData as LiveData<Boolean>
 
     fun getEpisodeLiveData() = episodeLiveData as LiveData<EpisodeData>
+
+    fun getListLoadingLiveData() = listLoadingLiveData
+
+    fun getListLiveData() = listLiveData
 
     fun loadData(id: Int) {
         loadingLiveData.postValue(true)
