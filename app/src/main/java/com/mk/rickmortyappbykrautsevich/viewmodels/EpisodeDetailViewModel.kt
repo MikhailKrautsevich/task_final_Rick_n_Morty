@@ -1,5 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,8 +17,8 @@ class EpisodeDetailViewModel : ViewModel() {
 
     private val episodeLiveData: MutableLiveData<EpisodeData> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private var listLoadingLiveData: LiveData<Boolean> = MutableLiveData()
-    private var listLiveData: LiveData<List<CharacterData>> = MutableLiveData()
+    private val listLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val listLiveData: MutableLiveData<List<CharacterData>> = MutableLiveData()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -30,9 +31,9 @@ class EpisodeDetailViewModel : ViewModel() {
 
     fun getEpisodeLiveData() = episodeLiveData as LiveData<EpisodeData>
 
-    fun getListLoadingLiveData() = listLoadingLiveData
+    fun getListLoadingLiveData() = listLoadingLiveData as LiveData<Boolean>
 
-    fun getListLiveData() = listLiveData
+    fun getListLiveData() = listLiveData as LiveData<List<CharacterData>>
 
     fun loadData(id: Int) {
         loadingLiveData.postValue(true)
@@ -51,6 +52,29 @@ class EpisodeDetailViewModel : ViewModel() {
                 })
             compositeDisposable.add(disposable)
         } ?: postEmptyData()
+    }
+
+    fun loadList(list: List<String>?) {
+        listLoadingLiveData.postValue(true)
+        list?.let {
+            if (it.isNotEmpty()) {
+                val characters = dataProvider.loadList(list)
+                compositeDisposable.add(characters.observeOn(Schedulers.newThread())
+                    .subscribeWith(object : DisposableSingleObserver<List<CharacterData>>() {
+                        override fun onError(e: Throwable) {
+                            listLoadingLiveData.postValue(false)
+                            e.localizedMessage?.let { it1 -> Log.d("112211", it1) }
+                        }
+
+                        override fun onSuccess(t: List<CharacterData>) {
+                            listLoadingLiveData.postValue(false)
+                            listLiveData.postValue(t)
+                        }
+                    }
+                    )
+                )
+            } else listLoadingLiveData.postValue(false)
+        } ?: listLoadingLiveData.postValue(false)
     }
 
     // Метод для обработки ошибок, метод нужно вызвать при полном отсутствии данных.

@@ -1,5 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.retrofit.api
 
+import com.mk.rickmortyappbykrautsevich.retrofit.models.CharacterRetrofitModel
 import com.mk.rickmortyappbykrautsevich.retrofit.models.EpisodeRetrofitModel
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
@@ -12,8 +13,8 @@ interface GetTheEpisodeApi {
         @Path("id") id: Int
     ): Single<EpisodeRetrofitModel>
 
-    @GET(value = "episode/{array}")
+    @GET(value = "character/{array}")
     fun getList(
         @Path("array") array: String
-    ): Single<List<EpisodeRetrofitModel>>
+    ): Single<List<CharacterRetrofitModel>>
 }

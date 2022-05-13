@@ -120,12 +120,22 @@ class EpisodeDetailFragment : Fragment() {
         ) { t ->
             t?.let {
                 setData(it)
+                viewModel.loadList(it.characters)
             }
         }
 
         listLoadingLiveData = viewModel.getListLoadingLiveData()
+        listLoadingLiveData?.observe(viewLifecycleOwner) { t ->
+            if (t == true) {
+                listProgressBar?.visibility = View.VISIBLE
+            } else listProgressBar?.visibility = View.INVISIBLE
+        }
 
         listLiveData = viewModel.getListLiveData()
+        listLiveData?.observe(viewLifecycleOwner) { t ->
+            (recyclerView?.adapter as CharacterAdapter).changeContacts(t)
+            recyclerView?.visibility = View.VISIBLE
+        }
     }
 
     override fun onDetach() {
