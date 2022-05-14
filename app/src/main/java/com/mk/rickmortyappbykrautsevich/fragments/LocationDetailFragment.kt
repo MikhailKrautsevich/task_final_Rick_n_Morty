@@ -49,7 +49,7 @@ class LocationDetailFragment : Fragment() {
     private var dimensionTV: TextView? = null
 
     private val viewModel: LocationDetailViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(LocationDetailViewModel::class.java)
+        ViewModelProvider(this).get(LocationDetailViewModel::class.java)
     }
     private var locId = -1
 

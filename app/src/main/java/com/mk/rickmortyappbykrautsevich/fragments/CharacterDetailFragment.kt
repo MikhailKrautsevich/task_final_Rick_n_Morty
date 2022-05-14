@@ -54,7 +54,7 @@ class CharacterDetailFragment : Fragment() {
     private var locationTV: TextView? = null
 
     private val viewModel: CharacterDetailViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(CharacterDetailViewModel::class.java)
+        ViewModelProvider(this).get(CharacterDetailViewModel::class.java)
     }
     private var charId = -1
 

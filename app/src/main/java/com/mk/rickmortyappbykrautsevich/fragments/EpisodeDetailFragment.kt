@@ -52,7 +52,7 @@ class EpisodeDetailFragment : Fragment() {
 //    private var createdTV: TextView? = null
 
     private val viewModel: EpisodeDetailViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(EpisodeDetailViewModel::class.java)
+        ViewModelProvider(this).get(EpisodeDetailViewModel::class.java)
     }
     private var epId = -1
 
