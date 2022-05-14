@@ -1,5 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.fragments.recyclers_data
 
+import com.mk.rickmortyappbykrautsevich.db.entities.CharacterEntity
 import com.mk.rickmortyappbykrautsevich.retrofit.models.CharacterRetrofitModel
 
 data class CharacterData(
@@ -44,5 +45,20 @@ data class CharacterData(
         episode = character.episode,
         url = character.url,
         created = character.created
+    )
+
+    constructor(char: CharacterEntity) : this(
+        id = char.id,
+        name = char.name,
+        species = char.species,
+        status = char.status,
+        type = char.type,
+        gender = char.gender,
+        origin = LocationReference(char.origin_name, char.origin_url),
+        location = LocationReference(char.location_name, char.location_url),
+        image = char.image,
+        episode = char.episode,
+        url = char.url,
+        created = char.created
     )
 }

@@ -1,5 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.fragments.recyclers_data
 
+import com.mk.rickmortyappbykrautsevich.db.entities.EpisodeEntity
 import com.mk.rickmortyappbykrautsevich.retrofit.models.EpisodeRetrofitModel
 
 data class EpisodeData(
@@ -30,6 +31,16 @@ data class EpisodeData(
         url = ep.url,
         created = ep.created,
         characters = ep.characters
+    )
+
+    constructor(ep: EpisodeEntity) : this(
+        id = ep.id,
+        name = ep.name,
+        airDate = ep.air_date,
+        episode = ep.episode,
+        characters = ep.characters,
+        url = ep.url,
+        created = ep.created
     )
 }
 
