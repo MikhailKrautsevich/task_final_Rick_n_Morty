@@ -4,21 +4,21 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mk.rickmortyappbykrautsevich.dataproviders.EpisodeDetailProvider
+import com.mk.rickmortyappbykrautsevich.dataproviders.CharacterDetailProvider
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class EpisodeDetailViewModel : ViewModel() {
+class CharacterDetailViewModel : ViewModel() {
 
-    private val dataProvider: EpisodeDetailProvider = EpisodeDetailProvider()
+    private val dataProvider: CharacterDetailProvider = CharacterDetailProvider()
 
-    private val episodeLiveData: MutableLiveData<EpisodeData> = MutableLiveData()
+    private val characterLiveData: MutableLiveData<CharacterData> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val listLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
-    private val listLiveData: MutableLiveData<List<CharacterData>> = MutableLiveData()
+    private val listLiveData: MutableLiveData<List<EpisodeData>> = MutableLiveData()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -27,22 +27,22 @@ class EpisodeDetailViewModel : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getEpLoadingLiveData() = loadingLiveData as LiveData<Boolean>
+    fun getCharLoadingLiveData() = loadingLiveData as LiveData<Boolean>
 
-    fun getEpisodeLiveData() = episodeLiveData as LiveData<EpisodeData>
+    fun getCharacterLiveData() = characterLiveData as LiveData<CharacterData>
 
     fun getListLoadingLiveData() = listLoadingLiveData as LiveData<Boolean>
 
-    fun getListLiveData() = listLiveData as LiveData<List<CharacterData>>
+    fun getListLiveData() = listLiveData as LiveData<List<EpisodeData>>
 
     fun loadData(id: Int) {
         loadingLiveData.postValue(true)
         val single = dataProvider.loadData(id)
         single?.let {
             val disposable = it.observeOn(Schedulers.newThread())
-                .subscribeWith(object : DisposableSingleObserver<EpisodeData>() {
-                    override fun onSuccess(t: EpisodeData) {
-                        episodeLiveData.postValue(t)
+                .subscribeWith(object : DisposableSingleObserver<CharacterData>() {
+                    override fun onSuccess(t: CharacterData) {
+                        characterLiveData.postValue(t)
                         loadingLiveData.postValue(false)
                     }
 
@@ -60,13 +60,13 @@ class EpisodeDetailViewModel : ViewModel() {
             if (it.isNotEmpty()) {
                 val list1 = dataProvider.loadList(list)
                 compositeDisposable.add(list1.observeOn(Schedulers.newThread())
-                    .subscribeWith(object : DisposableSingleObserver<List<CharacterData>>() {
+                    .subscribeWith(object : DisposableSingleObserver<List<EpisodeData>>() {
                         override fun onError(e: Throwable) {
                             listLoadingLiveData.postValue(false)
                             e.localizedMessage?.let { it1 -> Log.d("112211", it1) }
                         }
 
-                        override fun onSuccess(t: List<CharacterData>) {
+                        override fun onSuccess(t: List<EpisodeData>) {
                             listLoadingLiveData.postValue(false)
                             listLiveData.postValue(t)
                         }
@@ -80,7 +80,8 @@ class EpisodeDetailViewModel : ViewModel() {
     // Метод для обработки ошибок, метод нужно вызвать при полном отсутствии данных.
     private fun postEmptyData() {
         loadingLiveData.postValue(false)
-        val empty = EpisodeData()
-        episodeLiveData.postValue(empty)
+        val empty = CharacterData()
+        characterLiveData.postValue(empty)
     }
+
 }

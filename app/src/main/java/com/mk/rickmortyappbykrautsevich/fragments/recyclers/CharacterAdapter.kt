@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.FragmentHost
 import com.mk.rickmortyappbykrautsevich.R
+import com.mk.rickmortyappbykrautsevich.fragments.CharacterDetailFragment
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
 import com.squareup.picasso.Picasso
 
@@ -44,8 +45,7 @@ class CharacterAdapter(
         result.dispatchUpdatesTo(this)
     }
 
-    inner class CharacterHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+    inner class CharacterHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val image: ImageView = itemView.findViewById(R.id.char_image)
         private val nameTextView: TextView = itemView.findViewById(R.id.name_textview)
         private val specTextView: TextView = itemView.findViewById(R.id.spec_textview)
@@ -54,7 +54,13 @@ class CharacterAdapter(
         private var characterBound: CharacterData? = null
 
         init {
-            itemView.setOnClickListener { this }
+            itemView.setOnClickListener {
+                val fragment =
+                    characterBound?.id?.let { CharacterDetailFragment.newInstance(it) }
+                fragment?.let {
+                    host?.setFragment(it)
+                }
+            }
         }
 
         fun bind(character: CharacterData) {
@@ -65,11 +71,6 @@ class CharacterAdapter(
             statusTextView.text = character.status
             picasso.load(character.image).into(image)
         }
-
-        override fun onClick(p0: View?) {
-            TODO("Not yet implemented")
-        }
-
     }
 
     inner class ContactDiffUtilCallBack(

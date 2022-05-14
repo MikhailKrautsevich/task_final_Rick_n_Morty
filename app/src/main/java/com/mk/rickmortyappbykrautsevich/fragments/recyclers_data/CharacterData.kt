@@ -16,6 +16,21 @@ data class CharacterData(
     var url: String?,
     var created: String?
 ) {
+    constructor() : this(
+        id = -1,
+        name = null,
+        species = null,
+        status = null,
+        type = null,
+        gender = null,
+        origin = null,
+        location = null,
+        image = null,
+        episode = null,
+        url = null,
+        created = null
+    )
+
     constructor(character: CharacterRetrofitModel) : this(
         id = character.id,
         name = character.name,

@@ -8,7 +8,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -24,40 +24,82 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.35" />
 
-            <TextView
-                android:id="@+id/name_textview"
-                style="@style/TextViewOfOneItemFragment.LabelTextView"
-                android:text="@string/ep_name"
-                app:layout_constraintEnd_toEndOf="@id/guideline"
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/ep_code_textview"
+                android:id="@+id/name_textview"
                 style="@style/TextViewOfOneItemFragment.LabelTextView"
-                android:text="@string/ep_code"
+                android:text="@string/char_name"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/image" />
+
+            <TextView
+                android:id="@+id/char_spec_textview"
+                style="@style/TextViewOfOneItemFragment.LabelTextView"
+                android:text="@string/char_species"
                 app:layout_constraintEnd_toEndOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/name_textview" />
 
             <TextView
-                android:id="@+id/air_date_textview"
+                android:id="@+id/char_gender_textview"
                 style="@style/TextViewOfOneItemFragment.LabelTextView"
-                android:text="@string/ep_air_date"
+                android:text="@string/char_gender"
                 app:layout_constraintEnd_toEndOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ep_code_textview" />
+                app:layout_constraintTop_toBottomOf="@id/char_spec_textview" />
+
+            <TextView
+                android:id="@+id/char_status_textview"
+                style="@style/TextViewOfOneItemFragment.LabelTextView"
+                android:text="@string/char_status"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/char_gender_textview" />
+
+            <TextView
+                android:id="@+id/char_type_textview"
+                style="@style/TextViewOfOneItemFragment.LabelTextView"
+                android:text="@string/char_type"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/char_status_textview" />
+
+            <TextView
+                android:id="@+id/char_origin_textview"
+                style="@style/TextViewOfOneItemFragment.LabelTextView"
+                android:text="@string/char_origin"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/char_type_textview" />
+
+            <TextView
+                android:id="@+id/char_location_textview"
+                style="@style/TextViewOfOneItemFragment.LabelTextView"
+                android:text="@string/char_location"
+                app:layout_constraintEnd_toEndOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/char_origin_textview" />
 
             <!--        <TextView-->
-            <!--            android:id="@+id/ep_id_textview"-->
-            <!--            android:text="@string/ep_id"-->
+            <!--            android:id="@+id/char_id_textview"-->
+            <!--            android:text="Id:"-->
             <!--            style="@style/TextViewOfOneItemFragment.LabelTextView"-->
-            <!--            app:layout_constraintTop_toBottomOf="@id/air_date_textview"-->
+            <!--            app:layout_constraintTop_toBottomOf="@id/char_location_textview"-->
             <!--            app:layout_constraintStart_toStartOf="parent"-->
             <!--            app:layout_constraintEnd_toEndOf="@id/guideline"/>-->
 
             <!--        <TextView-->
-            <!--            android:id="@+id/ep_url_textview"-->
+            <!--            android:id="@+id/char_url_textview"-->
             <!--            android:text="@string/ep_url"-->
             <!--            style="@style/TextViewOfOneItemFragment.LabelTextView"-->
             <!--            app:layout_constraintTop_toTopOf="@id/value_url_textview"-->
@@ -66,10 +108,10 @@
             <!--            app:layout_constraintEnd_toEndOf="@id/guideline"/>-->
 
             <!--        <TextView-->
-            <!--            android:id="@+id/ep_created_textview"-->
+            <!--            android:id="@+id/char_created_textview"-->
             <!--            android:text="@string/ep_created"-->
             <!--            style="@style/TextViewOfOneItemFragment.LabelTextView"-->
-            <!--            app:layout_constraintTop_toBottomOf="@id/ep_url_textview"-->
+            <!--            app:layout_constraintTop_toBottomOf="@id/char_url_textview"-->
             <!--            app:layout_constraintStart_toStartOf="parent"-->
             <!--            app:layout_constraintEnd_toEndOf="@id/guideline"/>-->
 
@@ -82,27 +124,59 @@
                 app:layout_constraintTop_toTopOf="@id/name_textview" />
 
             <TextView
-                android:id="@+id/value_code_textview"
+                android:id="@+id/value_species_textview"
                 style="@style/TextViewOfOneItemFragment.ValueTextView"
-                app:layout_constraintBottom_toBottomOf="@id/ep_code_textview"
+                app:layout_constraintBottom_toBottomOf="@id/char_spec_textview"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guideline"
-                app:layout_constraintTop_toTopOf="@id/ep_code_textview" />
+                app:layout_constraintTop_toTopOf="@id/char_spec_textview" />
 
             <TextView
-                android:id="@+id/value_air_date_textview"
+                android:id="@+id/value_gender_textview"
                 style="@style/TextViewOfOneItemFragment.ValueTextView"
-                app:layout_constraintBottom_toBottomOf="@id/air_date_textview"
+                app:layout_constraintBottom_toBottomOf="@id/char_gender_textview"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guideline"
-                app:layout_constraintTop_toTopOf="@id/air_date_textview" />
+                app:layout_constraintTop_toTopOf="@id/char_gender_textview" />
+
+            <TextView
+                android:id="@+id/value_status_textview"
+                style="@style/TextViewOfOneItemFragment.ValueTextView"
+                app:layout_constraintBottom_toBottomOf="@id/char_status_textview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/char_status_textview" />
+
+            <TextView
+                android:id="@+id/value_type_textview"
+                style="@style/TextViewOfOneItemFragment.ValueTextView"
+                app:layout_constraintBottom_toBottomOf="@id/char_type_textview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/char_type_textview" />
+
+            <TextView
+                android:id="@+id/value_origin_textview"
+                style="@style/TextViewOfOneItemFragment.ValueTextView"
+                app:layout_constraintBottom_toBottomOf="@id/char_origin_textview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/char_origin_textview" />
+
+            <TextView
+                android:id="@+id/value_location_textview"
+                style="@style/TextViewOfOneItemFragment.ValueTextView"
+                app:layout_constraintBottom_toBottomOf="@id/char_location_textview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/char_location_textview" />
 
             <!--        <TextView-->
             <!--            android:id="@+id/value_id_textview"-->
             <!--            style="@style/TextViewOfOneItemFragment.ValueTextView"-->
-            <!--            app:layout_constraintTop_toTopOf="@id/ep_id_textview"-->
+            <!--            app:layout_constraintTop_toTopOf="@id/char_id_textview"-->
             <!--            app:layout_constraintStart_toStartOf="@id/guideline"-->
-            <!--            app:layout_constraintBottom_toBottomOf="@id/ep_id_textview"-->
+            <!--            app:layout_constraintBottom_toBottomOf="@id/char_id_textview"-->
             <!--            app:layout_constraintEnd_toEndOf="parent"/>-->
 
             <!--        <TextView-->
@@ -116,9 +190,9 @@
             <!--        <TextView-->
             <!--            android:id="@+id/value_created_textview"-->
             <!--            style="@style/TextViewOfOneItemFragment.ValueTextView"-->
-            <!--            app:layout_constraintTop_toTopOf="@id/ep_created_textview"-->
+            <!--            app:layout_constraintTop_toTopOf="@id/char_created_textview"-->
             <!--            app:layout_constraintStart_toStartOf="@id/guideline"-->
-            <!--            app:layout_constraintBottom_toBottomOf="@id/ep_created_textview"-->
+            <!--            app:layout_constraintBottom_toBottomOf="@id/char_created_textview"-->
             <!--            app:layout_constraintEnd_toEndOf="parent"/>-->
 
             <androidx.recyclerview.widget.RecyclerView
@@ -126,11 +200,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/air_date_textview"
-                tools:listitem="@layout/holder_character" />
+                app:layout_constraintTop_toBottomOf="@id/char_location_textview"
+                tools:listitem="@layout/holder_episode" />
 
             <ProgressBar
                 android:id="@+id/progress_bar"
@@ -155,5 +230,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

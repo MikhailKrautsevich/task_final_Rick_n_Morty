@@ -48,4 +48,11 @@
     <string name="ep_id">Episode id:</string>
     <string name="ep_url">URL:</string>
     <string name="ep_created">Created:</string>
+    <string name="char_name">Name:</string>
+    <string name="char_species">Species:</string>
+    <string name="char_gender">Gender:</string>
+    <string name="char_status">Status:</string>
+    <string name="char_type">Type:</string>
+    <string name="char_origin">Origin:</string>
+    <string name="char_location">Location:</string>
 </resources>
