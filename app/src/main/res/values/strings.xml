@@ -55,4 +55,7 @@
     <string name="char_type">Type:</string>
     <string name="char_origin">Origin:</string>
     <string name="char_location">Location:</string>
+    <string name="loc_type">Type:</string>
+    <string name="loc_dimension">Dimension:</string>
+    <string name="loc_name">Name:</string>
 </resources>

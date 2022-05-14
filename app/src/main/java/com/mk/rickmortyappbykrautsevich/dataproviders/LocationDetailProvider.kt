@@ -1,37 +1,35 @@
 package com.mk.rickmortyappbykrautsevich.dataproviders
 
-import android.util.Log
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeData
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.retrofit.RetrofitHelper
-import com.mk.rickmortyappbykrautsevich.retrofit.api.GetTheCharacterApi
+import com.mk.rickmortyappbykrautsevich.retrofit.api.GetTheLocationApi
 import com.mk.rickmortyappbykrautsevich.retrofit.models.CharacterRetrofitModel
-import com.mk.rickmortyappbykrautsevich.retrofit.models.EpisodeRetrofitModel
+import com.mk.rickmortyappbykrautsevich.retrofit.models.LocationRetrofitModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.regex.Pattern
 
-class CharacterDetailProvider {
+class LocationDetailProvider {
     companion object {
-        const val TO_REPLACE = "https://rickandmortyapi.com/api/episode/"
-        const val REGEX = "https://rickandmortyapi.com/api/episode/[0-9]+"
+        const val TO_REPLACE = "https://rickandmortyapi.com/api/character/"
+        const val REGEX = "https://rickandmortyapi.com/api/character/[0-9]+"
     }
 
-    private var api: GetTheCharacterApi? = null
+    private var api: GetTheLocationApi? = null
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
-        api = RetrofitHelper.getTheCharApi(retrofit)
+        api = RetrofitHelper.getTheLocApi(retrofit)
     }
 
-    fun loadData(id: Int): Single<CharacterData>? {
-        val single = api!!.getCharacter(id).subscribeOn(Schedulers.io())
+    fun loadData(id: Int): Single<LocationData>? {
+        val single = api!!.getLocation(id).subscribeOn(Schedulers.io())
         return handleSingle(single)
     }
 
-    fun loadList(list: List<String>): Single<List<EpisodeData>> {
-        Log.d("112211", "loadList")
+    fun loadList(list: List<String>): Single<List<CharacterData>> {
         val s = Single.just(list)
         val length = TO_REPLACE.length
         val single = s.toObservable()
@@ -46,28 +44,28 @@ class CharacterDetailProvider {
             .map { t -> t.toString() }
             .subscribeOn(Schedulers.computation())
 
-        val epsRetrofitModels: Single<List<EpisodeRetrofitModel>> = single.flatMap {
+        val charsRetrofitModels: Single<List<CharacterRetrofitModel>> = single.flatMap {
             api!!.getList(it)
         }.subscribeOn(Schedulers.io())
 
-        val result: Single<List<EpisodeData>> = epsRetrofitModels.toObservable()
+        val result: Single<List<CharacterData>> = charsRetrofitModels.toObservable()
             .flatMap { it ->
                 Observable.fromIterable(it)
             }.map { it ->
-                EpisodeData(it)
+                CharacterData(it)
             }.toList()
             .subscribeOn(Schedulers.computation())
         return result
     }
 
-    private fun handleSingle(single: Single<CharacterRetrofitModel>?): Single<CharacterData>? {
+    private fun handleSingle(single: Single<LocationRetrofitModel>?): Single<LocationData>? {
         val result = single?.map {
-                t -> transform(t)
+            t -> transform(t)
         }?.subscribeOn(Schedulers.computation())
         return result
     }
 
-    private fun transform(ch: CharacterRetrofitModel): CharacterData {
-        return CharacterData(ch)
+    private fun transform(loc: LocationRetrofitModel): LocationData {
+        return LocationData(loc)
     }
 }

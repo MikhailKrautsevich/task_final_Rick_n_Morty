@@ -1,6 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.dataproviders
 
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.retrofit.RetrofitHelper
 
 import com.mk.rickmortyappbykrautsevich.retrofit.api.GetLocationsApi
@@ -23,7 +23,7 @@ class AllLocationsProvider {
         api = RetrofitHelper.getLocsApi(retrofit)
     }
 
-    fun loadLocations(query: LocationQuery?): Single<List<LocationRecData>>? {
+    fun loadLocations(query: LocationQuery?): Single<List<LocationData>>? {
         currentPageNumber = 1
         currentQuery = query
         val single: Single<AllLocationsContainer>? = if (query == null) {
@@ -36,7 +36,7 @@ class AllLocationsProvider {
         return handleSingle(single)
     }
 
-    fun loadNewPage(): Single<List<LocationRecData>>? {
+    fun loadNewPage(): Single<List<LocationData>>? {
         return if (hasMoreData()) {
             val single = api?.getLocations(
                 page = ++currentPageNumber,
@@ -47,8 +47,8 @@ class AllLocationsProvider {
         } else Single.just(emptyList())
     }
 
-    private fun handleSingle(single: Single<AllLocationsContainer>?): Single<List<LocationRecData>>? {
-        val result: Single<List<LocationRecData>>? =
+    private fun handleSingle(single: Single<AllLocationsContainer>?): Single<List<LocationData>>? {
+        val result: Single<List<LocationData>>? =
             single?.subscribeOn(Schedulers.io())?.flatMap { t ->
                 getMaxPage(t)
                 Single.just(t.results) }
@@ -60,9 +60,9 @@ class AllLocationsProvider {
         return result
     }
 
-    private fun transformRepoLocsListInRecLocsList(list: List<LocationRetrofitModel>?): List<LocationRecData> {
-        val l = ArrayList<LocationRecData>()
-        list?.forEach { l.add(LocationRecData(it)) }
+    private fun transformRepoLocsListInRecLocsList(list: List<LocationRetrofitModel>?): List<LocationData> {
+        val l = ArrayList<LocationData>()
+        list?.forEach { l.add(LocationData(it)) }
         return l
     }
 

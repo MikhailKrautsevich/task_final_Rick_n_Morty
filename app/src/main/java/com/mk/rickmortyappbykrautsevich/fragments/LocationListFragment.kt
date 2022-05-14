@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,7 +19,7 @@ import com.mk.rickmortyappbykrautsevich.FragmentHost
 import com.mk.rickmortyappbykrautsevich.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers.LocationAdapter
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.LocationQuery
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllLocationViewModel
 
@@ -49,7 +48,7 @@ class LocationListFragment : Fragment() {
 
     private var loadingLiveData: LiveData<Boolean>? = null
     private var pagingLiveData: LiveData<Boolean>? = null
-    private var locationsLiveData: LiveData<List<LocationRecData>>? = null
+    private var locationsLiveData: LiveData<List<LocationData>>? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

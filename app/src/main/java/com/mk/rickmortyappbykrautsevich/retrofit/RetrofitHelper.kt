@@ -39,5 +39,8 @@ class RetrofitHelper {
 
         fun getTheCharApi(retrofit: Retrofit): GetTheCharacterApi =
             retrofit.create(GetTheCharacterApi::class.java)
+
+        fun getTheLocApi(retrofit: Retrofit) : GetTheLocationApi =
+            retrofit.create(GetTheLocationApi::class.java)
     }
 }

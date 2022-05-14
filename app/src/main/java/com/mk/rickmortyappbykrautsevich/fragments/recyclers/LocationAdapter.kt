@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mk.rickmortyappbykrautsevich.FragmentHost
 import com.mk.rickmortyappbykrautsevich.R
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationRecData
+import com.mk.rickmortyappbykrautsevich.fragments.LocationDetailFragment
+import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationData
 
 class LocationAdapter(
-    private var locs: List<LocationRecData>,
+    private var locs: List<LocationData>,
     private val host: FragmentHost?
 ) :
     RecyclerView.Adapter<LocationAdapter.LocationHolder>() {
@@ -31,8 +32,8 @@ class LocationAdapter(
 
     override fun getItemCount(): Int = locs.size
 
-    fun changeData(list: List<LocationRecData>) {
-        val new = ArrayList<LocationRecData>()
+    fun changeData(list: List<LocationData>) {
+        val new = ArrayList<LocationData>()
         new.addAll(list)
         val old = locs
         val diffUtilCallback = ContactDiffUtilCallBack(oldList = old, newList = new)
@@ -41,33 +42,33 @@ class LocationAdapter(
         result.dispatchUpdatesTo(this)
     }
 
-    inner class LocationHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+    inner class LocationHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val locNameTextView: TextView = itemView.findViewById(R.id.loc_name_textview)
         private val locTypeTextView: TextView = itemView.findViewById(R.id.loc_type_textview)
         private val locDimenTextView: TextView = itemView.findViewById(R.id.loc_dimen_textview)
-        private var locBound: LocationRecData? = null
+        private var locBound: LocationData? = null
 
         init {
-            itemView.setOnClickListener { this }
+            itemView.setOnClickListener {
+                val fragment =
+                    locBound?.id?.let { LocationDetailFragment.newInstance(it) }
+                fragment?.let {
+                    host?.setFragment(it)
+                }
+            }
         }
 
-        fun bind(loc: LocationRecData) {
+        fun bind(loc: LocationData) {
             locBound = loc
             locNameTextView.text = loc.name
             locTypeTextView.text = loc.type
             locDimenTextView.text = loc.dimension
         }
-
-        override fun onClick(p0: View?) {
-            TODO("Not yet implemented")
-        }
-
     }
 
     inner class ContactDiffUtilCallBack(
-        private val oldList: List<LocationRecData>,
-        private val newList: List<LocationRecData>
+        private val oldList: List<LocationData>,
+        private val newList: List<LocationData>
     ) : DiffUtil.Callback() {
         override fun getOldListSize() = oldList.size
 

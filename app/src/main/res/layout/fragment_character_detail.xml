@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:background="@color/gray"
             android:padding="4dp"
-            tools:context=".fragments.EpisodeListFragment">
+            tools:context=".fragments.CharacterDetailFragment">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
