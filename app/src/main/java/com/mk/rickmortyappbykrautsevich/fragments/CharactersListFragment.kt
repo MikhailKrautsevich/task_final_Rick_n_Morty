@@ -224,8 +224,8 @@ class CharactersListFragment : Fragment() {
             if (name?.isBlank() == false
                 || species?.isBlank() == false
                 || type?.isBlank() == false
-                || gender == null
-                || status == null
+                || gender != null
+                || status != null
             ) {
                 query = CharacterQuery(
                     name = name,

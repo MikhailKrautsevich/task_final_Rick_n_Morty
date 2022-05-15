@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:padding="4dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,28 +117,29 @@
                 android:id="@+id/filter_type"
                 style="@style/TextViewOfFilter.TextView"
                 android:text="@string/filter_type"
-                app:layout_constraintBottom_toTopOf="@id/filter_status"
+                app:layout_constraintBottom_toTopOf="@+id/filter_gender"
                 app:layout_constraintEnd_toEndOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/filter_species" />
 
             <TextView
-                android:id="@+id/filter_status"
+                android:id="@id/filter_gender"
                 style="@style/TextViewOfFilter.TextView"
-                android:text="@string/filter_status"
-                app:layout_constraintBottom_toTopOf="@id/filter_gender"
+                android:text="@string/filter_gender"
+                app:layout_constraintBottom_toTopOf="@+id/filter_status"
                 app:layout_constraintEnd_toEndOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/filter_type" />
 
             <TextView
-                android:id="@+id/filter_gender"
+                android:id="@+id/filter_status"
                 style="@style/TextViewOfFilter.TextView"
-                android:text="@string/filter_gender"
-                app:layout_constraintBottom_toTopOf="@id/use_filter"
+                android:text="@string/filter_status"
+                app:layout_constraintBottom_toTopOf="@+id/use_filter"
                 app:layout_constraintEnd_toEndOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/filter_status" />
+                app:layout_constraintTop_toBottomOf="@id/filter_gender" />
+
 
             <EditText
                 android:id="@+id/edit_name"
@@ -170,13 +171,6 @@
                 app:layout_constraintStart_toStartOf="@id/guideline"
                 app:layout_constraintTop_toTopOf="@id/filter_type" />
 
-            <Spinner
-                android:id="@+id/spinner_status"
-                style="@style/TextViewOfFilter.Spinner"
-                app:layout_constraintBottom_toBottomOf="@id/filter_status"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/guideline"
-                app:layout_constraintTop_toTopOf="@id/filter_status" />
 
             <Spinner
                 android:id="@+id/spinner_gender"
@@ -185,6 +179,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guideline"
                 app:layout_constraintTop_toTopOf="@id/filter_gender" />
+
+            <Spinner
+                android:id="@+id/spinner_status"
+                style="@style/TextViewOfFilter.Spinner"
+                app:layout_constraintBottom_toBottomOf="@id/filter_status"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/filter_status" />
 
             <Button
                 android:id="@+id/use_filter"

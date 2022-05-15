@@ -69,9 +69,9 @@ dependencies {
     implementation("androidx.room:room-runtime:2.4.2")
     annotationProcessor("androidx.room:room-compiler:2.4.2")
 
-    // To use Kotlin annotation processing tool (kapt)
-//    kapt("androidx.room:room-compiler:2.4.2")
-    // To use Kotlin Symbolic Processing (KSP)
+//     To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:2.4.2")
+//     To use Kotlin Symbolic Processing (KSP)
 //    ksp("androidx.room:room-compiler:2.4.2")
 
     // optional - RxJava3 support for Room
