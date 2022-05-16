@@ -20,8 +20,11 @@ interface CharacterDao {
 
     @Query(
         "SELECT * from characters " +
-                "WHERE name LIKE :name AND type LIKE :type AND species LIKE :species " +
-                "AND gender =:gender AND status =:status"
+                "WHERE name LIKE :name " +
+                "AND type LIKE :type " +
+                "AND species LIKE :species " +
+                "AND gender LIKE :gender " +
+                        "AND status LIKE :status"
     )
     fun getCharacters(
         name: String?,
