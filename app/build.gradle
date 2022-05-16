@@ -28,6 +28,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    // https://developer.android.com/codelabs/android-room-with-a-view-kotlin#3
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -66,8 +70,10 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     //Pull to refresh
 
+    implementation "androidx.room:room-ktx:2.4.2"
     implementation("androidx.room:room-runtime:2.4.2")
     annotationProcessor("androidx.room:room-compiler:2.4.2")
+    androidTestImplementation "androidx.room:room-testing:2.4.2"
 
 //     To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:2.4.2")

@@ -5,7 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.mk.rickmortyappbykrautsevich.retrofit.models.EpisodeRetrofitModel
 
-@Entity(indices = [Index(value = arrayOf("name", "id"), unique = true)])
+@Entity(tableName = "episodes",indices = [Index(value = arrayOf("name", "id"), unique = true)])
 data class EpisodeEntity constructor(
     @PrimaryKey
     var id: Int,

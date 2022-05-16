@@ -5,7 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.mk.rickmortyappbykrautsevich.retrofit.models.LocationRetrofitModel
 
-@Entity(indices = [Index(value = arrayOf("name", "id"), unique = true)])
+@Entity(tableName = "locations",indices = [Index(value = arrayOf("name", "id"), unique = true)])
 data class LocationEntity constructor(
     @PrimaryKey
     var id: Int,

@@ -3,7 +3,7 @@ package com.mk.rickmortyappbykrautsevich.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mk.rickmortyappbykrautsevich.dataproviders.AllCharactersProvider
+import com.mk.rickmortyappbykrautsevich.dataproviders.ListCharactersProvider
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.CharacterQuery
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class AllCharactersViewModel : ViewModel() {
 
-    private val dataProvider: AllCharactersProvider = AllCharactersProvider()
+    private val dataProvider: ListCharactersProvider = ListCharactersProvider()
     private val listLiveData: MutableLiveData<List<CharacterData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()

@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mk.rickmortyappbykrautsevich.dataproviders.AllEpisodeProvider
+import com.mk.rickmortyappbykrautsevich.dataproviders.ListEpisodeProvider
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeData
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.EpisodeQuery
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class AllEpisodesViewModel : ViewModel() {
-    private val dataProvider: AllEpisodeProvider = AllEpisodeProvider()
+    private val dataProvider: ListEpisodeProvider = ListEpisodeProvider()
     private val listLiveData: MutableLiveData<List<EpisodeData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()

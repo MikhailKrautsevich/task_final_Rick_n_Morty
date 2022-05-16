@@ -5,7 +5,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.mk.rickmortyappbykrautsevich.retrofit.models.CharacterRetrofitModel
 
-@Entity(indices = [Index(value = arrayOf("name", "id"), unique = true)])
+@Entity(tableName = "characters", indices = [Index(value = arrayOf("name", "id"), unique = true)])
 data class CharacterEntity constructor(
     @PrimaryKey
     var id: Int,
@@ -13,7 +13,7 @@ data class CharacterEntity constructor(
     var status: String?,
     var species: String?,
     var type: String?,
-    var gender : String?,
+    var gender: String?,
     var origin_name: String?,
     var origin_url: String?,
     var location_name: String?,

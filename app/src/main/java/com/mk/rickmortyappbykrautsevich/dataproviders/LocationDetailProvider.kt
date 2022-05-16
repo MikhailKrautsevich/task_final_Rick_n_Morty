@@ -44,11 +44,11 @@ class LocationDetailProvider {
             .map { t -> t.toString() }
             .subscribeOn(Schedulers.computation())
 
-        val charsRetrofitModels: Single<List<CharacterRetrofitModel>> = single.flatMap {
+        val locsRetrofitModels: Single<List<CharacterRetrofitModel>> = single.flatMap {
             api!!.getList(it)
         }.subscribeOn(Schedulers.io())
 
-        val result: Single<List<CharacterData>> = charsRetrofitModels.toObservable()
+        val result: Single<List<CharacterData>> = locsRetrofitModels.toObservable()
             .flatMap { it ->
                 Observable.fromIterable(it)
             }.map { it ->

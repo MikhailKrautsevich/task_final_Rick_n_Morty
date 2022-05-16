@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mk.rickmortyappbykrautsevich.dataproviders.AllLocationsProvider
+import com.mk.rickmortyappbykrautsevich.dataproviders.ListLocationsProvider
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.LocationQuery
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class AllLocationViewModel : ViewModel() {
-    private val dataProvider: AllLocationsProvider = AllLocationsProvider()
+    private val dataProvider: ListLocationsProvider = ListLocationsProvider()
     private val listLiveData: MutableLiveData<List<LocationData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()

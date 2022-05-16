@@ -46,11 +46,11 @@ class EpisodeDetailProvider {
             .map { t -> t.toString() }
             .subscribeOn(Schedulers.computation())
 
-        val charsRetrofitModels: Single<List<CharacterRetrofitModel>> = single.flatMap {
+        val epsRetrofitModels: Single<List<CharacterRetrofitModel>> = single.flatMap {
             api!!.getList(it)
         }.subscribeOn(Schedulers.io())
 
-        val result: Single<List<CharacterData>> = charsRetrofitModels.toObservable()
+        val result: Single<List<CharacterData>> = epsRetrofitModels.toObservable()
             .flatMap { it ->
                 Observable.fromIterable(it)
             }.map { it ->
