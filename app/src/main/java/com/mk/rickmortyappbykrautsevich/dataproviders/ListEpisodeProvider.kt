@@ -4,7 +4,6 @@ import android.util.Log
 import com.mk.rickmortyappbykrautsevich.App
 import com.mk.rickmortyappbykrautsevich.db.entities.EpisodeEntity
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.EpisodeData
-import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.retrofit.api.GetEpisodesApi
 import com.mk.rickmortyappbykrautsevich.retrofit.models.AllEpisodesContainer
@@ -25,7 +24,7 @@ class ListEpisodeProvider {
     private var maxPageNumber = 3
     private var currentQuery: EpisodeQuery? = null
 
-    val app = App.instance
+    private val app = App.instance
     val dao = app?.getDataBase()?.getEpisodeDao()
 
     init {

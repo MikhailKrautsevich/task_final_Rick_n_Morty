@@ -25,8 +25,8 @@ class ListCharactersProvider {
     private var maxPageNumber = 42
     private var currentQuery: CharacterQuery? = null
 
-    val app = App.instance
-    val dao = app?.getDataBase()?.getCharacterDao()
+    private val app = App.instance
+    private val dao = app?.getDataBase()?.getCharacterDao()
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())

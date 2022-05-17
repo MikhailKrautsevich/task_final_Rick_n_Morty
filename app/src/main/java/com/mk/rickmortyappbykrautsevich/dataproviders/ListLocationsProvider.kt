@@ -24,8 +24,8 @@ class ListLocationsProvider {
     private var maxPageNumber = 7
     private var currentQuery: LocationQuery? = null
 
-    val app = App.instance
-    val dao = app?.getDataBase()?.getLocationDao()
+    private val app = App.instance
+    private val dao = app?.getDataBase()?.getLocationDao()
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())

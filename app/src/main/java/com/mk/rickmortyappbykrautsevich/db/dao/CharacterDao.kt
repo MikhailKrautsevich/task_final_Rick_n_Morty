@@ -5,8 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mk.rickmortyappbykrautsevich.db.entities.CharacterEntity
-import com.mk.rickmortyappbykrautsevich.db.entities.LocationEntity
-import com.mk.rickmortyappbykrautsevich.enums.Gender
 import io.reactivex.rxjava3.core.Single
 
 @Dao
@@ -24,7 +22,7 @@ interface CharacterDao {
                 "AND type LIKE :type " +
                 "AND species LIKE :species " +
                 "AND gender LIKE :gender " +
-                        "AND status LIKE :status"
+                "AND status LIKE :status"
     )
     fun getCharacters(
         name: String?,
@@ -33,4 +31,10 @@ interface CharacterDao {
         gender: String?,
         status: String?
     ): Single<List<CharacterEntity>>
+
+    @Query("SELECT * from characters WHERE id = :id")
+    fun getTheCharacter(id: Int): Single<CharacterEntity>
+
+    @Query("SELECT * from characters WHERE url in (:list)")
+    fun getCharacters(list: List<String>): Single<List<CharacterEntity>>
 }

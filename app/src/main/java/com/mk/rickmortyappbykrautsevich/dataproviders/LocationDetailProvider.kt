@@ -1,5 +1,6 @@
 package com.mk.rickmortyappbykrautsevich.dataproviders
 
+import com.mk.rickmortyappbykrautsevich.App
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.retrofit.RetrofitHelper
@@ -17,6 +18,9 @@ class LocationDetailProvider {
         const val REGEX = "https://rickandmortyapi.com/api/character/[0-9]+"
     }
 
+    private val app = App.instance
+    private val locationDao = app?.getDataBase()?.getLocationDao()
+    private val characterDao = app?.getDataBase()?.getCharacterDao()
     private var api: GetTheLocationApi? = null
 
     init {
@@ -25,42 +29,55 @@ class LocationDetailProvider {
     }
 
     fun loadData(id: Int): Single<LocationData>? {
-        val single = api!!.getLocation(id).subscribeOn(Schedulers.io())
-        return handleSingle(single)
+        val isNetworkAvailable = app!!.isNetworkAvailable()
+        return if (isNetworkAvailable) {
+            val single = api!!.getLocation(id).subscribeOn(Schedulers.io())
+            handleSingle(single)
+        } else {
+            val fromCash = locationDao!!.getTheLocation(id).subscribeOn(Schedulers.io())
+            fromCash.map { t -> LocationData(t) }.subscribeOn(Schedulers.computation())
+        }
     }
 
     fun loadList(list: List<String>): Single<List<CharacterData>> {
-        val s = Single.just(list)
-        val length = TO_REPLACE.length
-        val single = s.toObservable()
-            .flatMap { Observable.fromIterable(list) }.filter { t ->
-                val p = Pattern.compile(REGEX)
-                val matcher = p.matcher(t)
-                matcher.matches()
-            }
-            .map { t -> t.substring(length until t.length) }
-            .map { t -> t.toInt() }
-            .toList()
-            .map { t -> t.toString() }
-            .subscribeOn(Schedulers.computation())
+        val isNetworkAvailable = app!!.isNetworkAvailable()
+        if (isNetworkAvailable) {
+            val s = Single.just(list)
+            val length = TO_REPLACE.length
+            val single = s.toObservable()
+                .flatMap { Observable.fromIterable(list) }.filter { t ->
+                    val p = Pattern.compile(REGEX)
+                    val matcher = p.matcher(t)
+                    matcher.matches()
+                }
+                .map { t -> t.substring(length until t.length) }
+                .map { t -> t.toInt() }
+                .toList()
+                .map { t -> t.toString() }
+                .subscribeOn(Schedulers.computation())
 
-        val locsRetrofitModels: Single<List<CharacterRetrofitModel>> = single.flatMap {
-            api!!.getList(it)
-        }.subscribeOn(Schedulers.io())
+            val locsRetrofitModels: Single<List<CharacterRetrofitModel>> = single.flatMap {
+                api!!.getList(it)
+            }.subscribeOn(Schedulers.io())
 
-        val result: Single<List<CharacterData>> = locsRetrofitModels.toObservable()
-            .flatMap { it ->
-                Observable.fromIterable(it)
-            }.map { it ->
-                CharacterData(it)
-            }.toList()
-            .subscribeOn(Schedulers.computation())
-        return result
+            val result: Single<List<CharacterData>> = locsRetrofitModels.toObservable()
+                .flatMap { it ->
+                    Observable.fromIterable(it)
+                }.map { it ->
+                    CharacterData(it)
+                }.toList()
+                .subscribeOn(Schedulers.computation())
+            return result
+        } else {
+            return characterDao!!.getCharacters(list).subscribeOn(Schedulers.io())
+                .toObservable().flatMap { Observable.fromIterable(it) }
+                .map { it -> CharacterData(it) }.toList().subscribeOn(Schedulers.computation())
+        }
     }
 
     private fun handleSingle(single: Single<LocationRetrofitModel>?): Single<LocationData>? {
-        val result = single?.map {
-            t -> transform(t)
+        val result = single?.map { t ->
+            transform(t)
         }?.subscribeOn(Schedulers.computation())
         return result
     }
