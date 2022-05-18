@@ -6,7 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.room.Room
-import com.mk.rickmortyappbykrautsevich.db.RMDatabase
+import com.mk.rickmortyappbykrautsevich.data.db.RMDatabase
 
 class App : Application() {
 
