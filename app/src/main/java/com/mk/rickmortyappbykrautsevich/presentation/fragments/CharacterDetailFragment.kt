@@ -17,12 +17,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mk.rickmortyappbykrautsevich.presentation.activity.FragmentHost
 import com.mk.rickmortyappbykrautsevich.presentation.activity.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
+import com.mk.rickmortyappbykrautsevich.data.app.App
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers.EpisodeAdapter
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.EpisodeData
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.CharacterDetailViewModel
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.CharacterDetailViewModelInterface
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 class CharacterDetailFragment : Fragment() {
     companion object {
@@ -37,6 +39,9 @@ class CharacterDetailFragment : Fragment() {
             return fragment
         }
     }
+
+    @Inject
+    lateinit var picasso : Picasso
 
     private var hasBottomNavs: HasBottomNavs? = null
     private var fragmentHost: FragmentHost? = null
@@ -63,8 +68,6 @@ class CharacterDetailFragment : Fragment() {
     private var epLoadingLiveData: LiveData<Boolean>? = null
     private var listLoadingLiveData: LiveData<Boolean>? = null
     private var listLiveData: LiveData<List<EpisodeData>>? = null
-
-    private val picasso = Picasso.get()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -94,6 +97,7 @@ class CharacterDetailFragment : Fragment() {
         locationTV = v.findViewById(R.id.value_location_textview)
 
         initPullToRefresh(v)
+        App.instance!!.component.inject(this)
         return v
     }
 

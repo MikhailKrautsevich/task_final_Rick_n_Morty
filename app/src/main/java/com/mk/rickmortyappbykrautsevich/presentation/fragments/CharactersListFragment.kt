@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mk.rickmortyappbykrautsevich.presentation.activity.FragmentHost
 import com.mk.rickmortyappbykrautsevich.presentation.activity.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
+import com.mk.rickmortyappbykrautsevich.data.app.App
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.enums.Gender
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.enums.Status
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers.CharacterAdapter
@@ -29,6 +30,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class CharactersListFragment : Fragment() {
 
@@ -37,9 +39,11 @@ class CharactersListFragment : Fragment() {
         fun newInstance() = CharactersListFragment()
     }
 
+    @Inject
+    lateinit var picasso : Picasso
+
     private var hasBottomNavs: HasBottomNavs? = null
     private var host: FragmentHost? = null
-    private val picasso = Picasso.get()
     private var recyclerView: RecyclerView? = null
     private var noResults: TextView? = null
     private var showFilters: Button? = null
@@ -89,6 +93,7 @@ class CharactersListFragment : Fragment() {
         pagingProgressBar = v.findViewById(R.id.paging_progress_bar)
 
         initPullToRefresh(v)
+        App.instance!!.component.inject(this)
         return v
     }
 

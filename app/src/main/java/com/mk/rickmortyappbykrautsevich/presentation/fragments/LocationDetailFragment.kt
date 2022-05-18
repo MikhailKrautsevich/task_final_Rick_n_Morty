@@ -16,12 +16,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mk.rickmortyappbykrautsevich.presentation.activity.FragmentHost
 import com.mk.rickmortyappbykrautsevich.presentation.activity.HasBottomNavs
 import com.mk.rickmortyappbykrautsevich.R
+import com.mk.rickmortyappbykrautsevich.data.app.App
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers.CharacterAdapter
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.LocationDetailViewModel
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.LocationDetailViewModelInterface
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 class LocationDetailFragment : Fragment() {
 
@@ -37,6 +39,9 @@ class LocationDetailFragment : Fragment() {
             return fragment
         }
     }
+
+    @Inject
+    lateinit var picasso : Picasso
 
     private var hasBottomNavs: HasBottomNavs? = null
     private var host: FragmentHost? = null
@@ -83,6 +88,7 @@ class LocationDetailFragment : Fragment() {
         dimensionTV = v.findViewById(R.id.value_dimen_textview)
 
         initPullToRefresh(v)
+        App.instance!!.component.inject(this)
         return v
     }
 
@@ -94,7 +100,7 @@ class LocationDetailFragment : Fragment() {
             it.layoutManager = LinearLayoutManager(requireActivity())
             it.overScrollMode = View.OVER_SCROLL_NEVER
             val list: ArrayList<CharacterData> = ArrayList()
-            it.adapter = CharacterAdapter(list, Picasso.get(), host)
+            it.adapter = CharacterAdapter(list, picasso, host)
             it.visibility = View.INVISIBLE
         }
 

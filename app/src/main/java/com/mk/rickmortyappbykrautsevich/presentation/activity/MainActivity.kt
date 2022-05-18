@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mk.rickmortyappbykrautsevich.R
+import com.mk.rickmortyappbykrautsevich.data.app.App
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.CharactersListFragment
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.EpisodeListFragment
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.LocationListFragment
