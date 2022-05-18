@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.35" />
+
+    <TextView
+        android:id="@+id/ep_name_textview"
+        style="@style/TextViewOfRecyclerView.ValueTextView"
+        android:hint="@string/hint_episode_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ep_number_textview"
+        style="@style/TextViewOfRecyclerView.ValueTextView"
+        android:hint="@string/hint_episode_number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/ep_name_textview" />
+
+    <TextView
+        android:id="@+id/ep_air_date_textview"
+        style="@style/TextViewOfRecyclerView.ValueTextView"
+        android:hint="@string/hint_episode_air_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/ep_number_textview" />
+
+    <TextView
+        android:id="@+id/label_name_ep"
+        style="@style/TextViewOfRecyclerView.LabelTextView"
+        android:text="@string/label_ep_name"
+        app:layout_constraintBottom_toBottomOf="@id/ep_name_textview"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ep_name_textview" />
+
+    <TextView
+        android:id="@+id/label_number_ep"
+        style="@style/TextViewOfRecyclerView.LabelTextView"
+        android:text="@string/label_ep_episode"
+        app:layout_constraintBottom_toBottomOf="@id/ep_number_textview"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ep_number_textview" />
+
+    <TextView
+        android:id="@+id/label_air_date_ep"
+        style="@style/TextViewOfRecyclerView.LabelTextView"
+        android:text="@string/label_ep_air_date"
+        app:layout_constraintBottom_toBottomOf="@id/ep_air_date_textview"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ep_air_date_textview" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
