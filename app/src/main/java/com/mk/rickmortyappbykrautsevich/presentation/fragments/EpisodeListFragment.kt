@@ -23,6 +23,7 @@ import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.Ep
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.utils.SearchViewUtil
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.queries.EpisodeQuery
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.AllEpisodesViewModel
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.AllEpisodesViewModelInterface
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -48,7 +49,7 @@ class EpisodeListFragment : Fragment() {
     private var filterCode: EditText? = null
     private var mainProgressBar: ProgressBar? = null
     private var pagingProgressBar: ProgressBar? = null
-    private val viewModel: AllEpisodesViewModel by lazy {
+    private val viewModel: AllEpisodesViewModelInterface by lazy {
         ViewModelProvider(requireActivity()).get(AllEpisodesViewModel::class.java)
     }
 

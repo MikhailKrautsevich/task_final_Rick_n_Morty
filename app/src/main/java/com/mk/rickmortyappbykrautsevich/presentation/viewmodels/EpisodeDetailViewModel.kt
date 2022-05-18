@@ -5,15 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.EpisodeDetailProvider
+import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.EpisodeDetailProviderInterface
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.EpisodeData
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.EpisodeDetailViewModelInterface
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class EpisodeDetailViewModel : ViewModel() {
+class EpisodeDetailViewModel : ViewModel(), EpisodeDetailViewModelInterface {
 
-    private val dataProvider: EpisodeDetailProvider = EpisodeDetailProvider()
+    private val dataProvider: EpisodeDetailProviderInterface = EpisodeDetailProvider()
 
     private val episodeLiveData: MutableLiveData<EpisodeData> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -27,15 +29,15 @@ class EpisodeDetailViewModel : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getEpLoadingLiveData() = loadingLiveData as LiveData<Boolean>
+    override fun getEpLoadingLiveData() = loadingLiveData as LiveData<Boolean>
 
-    fun getEpisodeLiveData() = episodeLiveData as LiveData<EpisodeData>
+    override fun getEpisodeLiveData() = episodeLiveData as LiveData<EpisodeData>
 
-    fun getListLoadingLiveData() = listLoadingLiveData as LiveData<Boolean>
+    override fun getListLoadingLiveData() = listLoadingLiveData as LiveData<Boolean>
 
-    fun getListLiveData() = listLiveData as LiveData<List<CharacterData>>
+    override fun getListLiveData() = listLiveData as LiveData<List<CharacterData>>
 
-    fun loadData(id: Int) {
+    override fun loadData(id: Int) {
         loadingLiveData.postValue(true)
         val single = dataProvider.loadData(id)
         single?.let {
@@ -54,7 +56,7 @@ class EpisodeDetailViewModel : ViewModel() {
         } ?: postEmptyData()
     }
 
-    fun loadList(list: List<String>?) {
+    override fun loadList(list: List<String>?) {
         listLoadingLiveData.postValue(true)
         list?.let {
             if (it.isNotEmpty()) {

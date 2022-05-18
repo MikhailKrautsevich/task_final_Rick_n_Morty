@@ -20,6 +20,7 @@ import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers.Charact
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.LocationDetailViewModel
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.LocationDetailViewModelInterface
 import com.squareup.picasso.Picasso
 
 class LocationDetailFragment : Fragment() {
@@ -48,7 +49,7 @@ class LocationDetailFragment : Fragment() {
     private var typeTV: TextView? = null
     private var dimensionTV: TextView? = null
 
-    private val viewModel: LocationDetailViewModel by lazy {
+    private val viewModel: LocationDetailViewModelInterface by lazy {
         ViewModelProvider(this).get(LocationDetailViewModel::class.java)
     }
     private var locId = -1

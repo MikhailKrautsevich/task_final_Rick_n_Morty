@@ -22,6 +22,7 @@ import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.Ch
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.utils.SearchViewUtil
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.queries.CharacterQuery
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.AllCharactersViewModel
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.AllCharactersViewModelInterface
 import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -53,7 +54,7 @@ class CharactersListFragment : Fragment() {
     private var filterGenderPos: Int = -1
     private var mainProgressBar: ProgressBar? = null
     private var pagingProgressBar: ProgressBar? = null
-    private val viewModel: AllCharactersViewModel by lazy {
+    private val viewModel: AllCharactersViewModelInterface by lazy {
         ViewModelProvider(requireActivity()).get(AllCharactersViewModel::class.java)
     }
 

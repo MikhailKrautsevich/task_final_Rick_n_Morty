@@ -23,6 +23,7 @@ import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.Lo
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.utils.SearchViewUtil
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.queries.LocationQuery
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.AllLocationViewModel
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.AllLocationViewModelInterface
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -49,7 +50,7 @@ class LocationListFragment : Fragment() {
     private var filterDimension: EditText? = null
     private var mainProgressBar: ProgressBar? = null
     private var pagingProgressBar: ProgressBar? = null
-    private val viewModel: AllLocationViewModel by lazy {
+    private val viewModel: AllLocationViewModelInterface by lazy {
         ViewModelProvider(requireActivity()).get(AllLocationViewModel::class.java)
     }
 

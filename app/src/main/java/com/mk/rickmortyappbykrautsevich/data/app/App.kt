@@ -1,4 +1,4 @@
-package com.mk.rickmortyappbykrautsevich
+package com.mk.rickmortyappbykrautsevich.data.app
 
 import android.app.Application
 import android.content.Context
@@ -8,7 +8,7 @@ import android.os.Build
 import androidx.room.Room
 import com.mk.rickmortyappbykrautsevich.data.db.RMDatabase
 
-class App : Application() {
+class App : Application(), DBProvider, NetworkChecker {
 
     companion object {
         var instance: App? = null
@@ -27,9 +27,9 @@ class App : Application() {
         }
     }
 
-    fun getDataBase(): RMDatabase? = dataBase
+    override fun getDataBase(): RMDatabase? = dataBase
 
-    fun isNetworkAvailable(): Boolean {
+    override fun isNetworkAvailable(): Boolean {
         val conManager: ConnectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

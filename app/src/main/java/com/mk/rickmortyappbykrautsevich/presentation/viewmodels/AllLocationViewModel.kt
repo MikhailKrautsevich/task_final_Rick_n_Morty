@@ -5,14 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.ListLocationsProvider
+import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListLocationsProviderInterface
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.queries.LocationQuery
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.AllLocationViewModelInterface
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.UsesPagination
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.WithSearchView
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class AllLocationViewModel : ViewModel() {
-    private val dataProvider: ListLocationsProvider = ListLocationsProvider()
+class AllLocationViewModel : ViewModel(), UsesPagination, WithSearchView,
+    AllLocationViewModelInterface {
+    private val dataProvider: ListLocationsProviderInterface = ListLocationsProvider()
     private val listLiveData: MutableLiveData<List<LocationData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -31,13 +36,13 @@ class AllLocationViewModel : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
+    override fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
 
-    fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
+    override fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
 
-    fun getLocationsList() = listLiveData as LiveData<List<LocationData>>
+    override fun getLocationsList() = listLiveData as LiveData<List<LocationData>>
 
-    fun getData(query: LocationQuery?) {
+    override fun getData(query: LocationQuery?) {
         // при true ProgressBar виден
         loadingLiveData.postValue(true)
         currentQuery = query
@@ -61,7 +66,7 @@ class AllLocationViewModel : ViewModel() {
         } ?: postEmptyList()
     }
 
-    fun getMoreData() {
+    override fun getMoreData() {
         if (dataProvider.hasMoreData()) {
             paginationLiveData.postValue(true)
             val single = dataProvider.loadNewPage()
@@ -99,7 +104,7 @@ class AllLocationViewModel : ViewModel() {
         listLiveData.postValue(locationsList)
     }
 
-    fun makeQueryForSearchView(s : String?){
+    override fun makeQueryForSearchView(s: String?) {
         val query = LocationQuery(s, "", "")
         getData(query)
     }

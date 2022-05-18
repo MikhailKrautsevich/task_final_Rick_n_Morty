@@ -4,15 +4,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mk.rickmortyappbykrautsevich.data.dataproviders.ListEpisodeProvider
+import com.mk.rickmortyappbykrautsevich.data.dataproviders.ListEpisodesProvider
+import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListEpisodesProviderInterface
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.EpisodeData
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.queries.EpisodeQuery
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.AllEpisodesViewModelInterface
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.UsesPagination
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.WithSearchView
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class AllEpisodesViewModel : ViewModel() {
-    private val dataProvider: ListEpisodeProvider = ListEpisodeProvider()
+class AllEpisodesViewModel : ViewModel(), UsesPagination, WithSearchView,
+    AllEpisodesViewModelInterface {
+    private val dataProvider: ListEpisodesProviderInterface = ListEpisodesProvider()
     private val listLiveData: MutableLiveData<List<EpisodeData>> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
     private val paginationLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -31,13 +36,13 @@ class AllEpisodesViewModel : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
+    override fun getLoadingLiveData() = loadingLiveData as LiveData<Boolean>
 
-    fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
+    override fun getPaginationLiveData() = paginationLiveData as LiveData<Boolean>
 
-    fun getEpisodesList() = listLiveData as LiveData<List<EpisodeData>>
+    override fun getEpisodesList() = listLiveData as LiveData<List<EpisodeData>>
 
-    fun getData(query: EpisodeQuery?) {
+    override fun getData(query: EpisodeQuery?) {
         loadingLiveData.postValue(true)
         currentQuery = query
         episodesList = ArrayList()
@@ -61,7 +66,7 @@ class AllEpisodesViewModel : ViewModel() {
         } ?: postEmptyList()
     }
 
-    fun getMoreData() {
+    override fun getMoreData() {
         if (dataProvider.hasMoreData()) {
             paginationLiveData.postValue(true)
             val single = dataProvider.loadNewPage()
@@ -99,7 +104,7 @@ class AllEpisodesViewModel : ViewModel() {
         listLiveData.postValue(episodesList)
     }
 
-    fun makeQueryForSearchView(s : String?){
+    override fun makeQueryForSearchView(s: String?) {
         val query = EpisodeQuery(s, "")
         getData(query)
     }

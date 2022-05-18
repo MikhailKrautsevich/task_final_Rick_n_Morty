@@ -5,14 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.LocationDetailProvider
+import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.LocationDetailProviderInterface
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.LocationData
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.LocationDetailViewModelInterface
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.observers.DisposableSingleObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class LocationDetailViewModel : ViewModel() {
-    private val dataProvider: LocationDetailProvider = LocationDetailProvider()
+class LocationDetailViewModel : ViewModel(), LocationDetailViewModelInterface {
+    private val dataProvider: LocationDetailProviderInterface = LocationDetailProvider()
 
     private val locLiveData: MutableLiveData<LocationData> = MutableLiveData()
     private val loadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
@@ -26,15 +28,15 @@ class LocationDetailViewModel : ViewModel() {
         compositeDisposable.dispose()
     }
 
-    fun getLocLoadingLiveData() = loadingLiveData as LiveData<Boolean>
+    override fun getLocLoadingLiveData() = loadingLiveData as LiveData<Boolean>
 
-    fun getLocationLiveData() = locLiveData as LiveData<LocationData>
+    override fun getLocationLiveData() = locLiveData as LiveData<LocationData>
 
-    fun getListLoadingLiveData() = listLoadingLiveData as LiveData<Boolean>
+    override fun getListLoadingLiveData() = listLoadingLiveData as LiveData<Boolean>
 
-    fun getListLiveData() = listLiveData as LiveData<List<CharacterData>>
+    override fun getListLiveData() = listLiveData as LiveData<List<CharacterData>>
 
-    fun loadData(id: Int) {
+    override fun loadData(id: Int) {
         loadingLiveData.postValue(true)
         val single = dataProvider.loadData(id)
         single?.let {
@@ -53,7 +55,7 @@ class LocationDetailViewModel : ViewModel() {
         } ?: postEmptyData()
     }
 
-    fun loadList(list: List<String>?) {
+    override fun loadList(list: List<String>?) {
         listLoadingLiveData.postValue(true)
         list?.let {
             if (it.isNotEmpty()) {

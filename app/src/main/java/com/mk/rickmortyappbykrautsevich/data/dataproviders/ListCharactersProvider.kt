@@ -1,7 +1,9 @@
 package com.mk.rickmortyappbykrautsevich.data.dataproviders
 
 import android.util.Log
-import com.mk.rickmortyappbykrautsevich.App
+import com.mk.rickmortyappbykrautsevich.data.app.App
+import com.mk.rickmortyappbykrautsevich.data.app.NetworkChecker
+import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListCharactersProviderInterface
 import com.mk.rickmortyappbykrautsevich.data.db.entities.CharacterEntity
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.data.retrofit.RetrofitHelper
@@ -16,7 +18,7 @@ import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class ListCharactersProvider {
+class ListCharactersProvider : ListCharactersProviderInterface {
 
     private var api: GetCharactersApi? = null
     private var currentPageNumber = 1
@@ -25,16 +27,16 @@ class ListCharactersProvider {
     private var maxPageNumber = 42
     private var currentQuery: CharacterQuery? = null
 
-    private val app = App.instance
-    private val dao = app?.getDataBase()?.getCharacterDao()
+    private val dao = App.instance?.getDataBase()?.getCharacterDao()
+    private val checker : NetworkChecker = App.instance as NetworkChecker
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
         api = RetrofitHelper.getCharsApi(retrofit)
     }
 
-    fun loadCharacters(query: CharacterQuery?): Single<List<CharacterData>>? {
-        val isNetworkAvailable = app!!.isNetworkAvailable()
+    override fun loadCharacters(query: CharacterQuery?): Single<List<CharacterData>>? {
+        val isNetworkAvailable = checker.isNetworkAvailable()
         if (isNetworkAvailable) {
             currentPageNumber = 1
             currentQuery = query
@@ -74,7 +76,7 @@ class ListCharactersProvider {
         }
     }
 
-    fun loadNewPage(): Single<List<CharacterData>>? {
+    override fun loadNewPage(): Single<List<CharacterData>>? {
         return if (hasMoreData()) {
             val single = api?.getCharacters(
                 page = ++currentPageNumber,
@@ -110,7 +112,7 @@ class ListCharactersProvider {
         return l
     }
 
-    fun hasMoreData(): Boolean = currentPageNumber + 1 <= maxPageNumber
+    override fun hasMoreData(): Boolean = currentPageNumber + 1 <= maxPageNumber
 
     private fun getMaxPage(container: AllCharactersContainer) {
         maxPageNumber = container.info.pages
@@ -129,7 +131,7 @@ class ListCharactersProvider {
 
                     override fun onSuccess(t: List<CharacterEntity>) {
                         Log.d("112211", "AllLocationProvider: onSuccess - start")
-                        dao?.insertList(t)
+                        dao!!.insertList(t)
                         Log.d("112211", "AllLocationProvider: onSuccess - finish")
                     }
 

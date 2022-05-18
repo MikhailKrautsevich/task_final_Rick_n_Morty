@@ -1,7 +1,9 @@
 package com.mk.rickmortyappbykrautsevich.data.dataproviders
 
 import android.util.Log
-import com.mk.rickmortyappbykrautsevich.App
+import com.mk.rickmortyappbykrautsevich.data.app.App
+import com.mk.rickmortyappbykrautsevich.data.app.NetworkChecker
+import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListLocationsProviderInterface
 import com.mk.rickmortyappbykrautsevich.data.db.entities.LocationEntity
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.LocationData
 import com.mk.rickmortyappbykrautsevich.data.retrofit.RetrofitHelper
@@ -16,7 +18,7 @@ import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class ListLocationsProvider {
+class ListLocationsProvider : ListLocationsProviderInterface{
     private var api: GetLocationsApi? = null
     private var currentPageNumber = 1
 
@@ -24,16 +26,16 @@ class ListLocationsProvider {
     private var maxPageNumber = 7
     private var currentQuery: LocationQuery? = null
 
-    private val app = App.instance
-    private val dao = app?.getDataBase()?.getLocationDao()
+    private val checker : NetworkChecker = App.instance as NetworkChecker
+    private val dao = App.instance?.getDataBase()?.getLocationDao()
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
         api = RetrofitHelper.getLocsApi(retrofit)
     }
 
-    fun loadLocations(query: LocationQuery?): Single<List<LocationData>>? {
-        val isNetworkAvailable = app!!.isNetworkAvailable()
+    override fun loadLocations(query: LocationQuery?): Single<List<LocationData>>? {
+        val isNetworkAvailable = checker.isNetworkAvailable()
         if (isNetworkAvailable) {
             currentPageNumber = 1
             currentQuery = query
@@ -71,7 +73,7 @@ class ListLocationsProvider {
         }
     }
 
-    fun loadNewPage(): Single<List<LocationData>>? {
+    override fun loadNewPage(): Single<List<LocationData>>? {
         return if (hasMoreData()) {
             val single = api?.getLocations(
                 page = ++currentPageNumber,
@@ -106,7 +108,7 @@ class ListLocationsProvider {
         return l
     }
 
-    fun hasMoreData(): Boolean = currentPageNumber + 1 <= maxPageNumber
+    override fun hasMoreData(): Boolean = currentPageNumber + 1 <= maxPageNumber
 
     private fun getMaxPage(container: AllLocationsContainer) {
         maxPageNumber = container.info.pages

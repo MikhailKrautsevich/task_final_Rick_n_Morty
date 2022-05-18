@@ -20,6 +20,7 @@ import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers.Charact
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.EpisodeData
 import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.EpisodeDetailViewModel
+import com.mk.rickmortyappbykrautsevich.presentation.viewmodels.interfaces.EpisodeDetailViewModelInterface
 import com.squareup.picasso.Picasso
 
 class EpisodeDetailFragment : Fragment() {
@@ -51,7 +52,7 @@ class EpisodeDetailFragment : Fragment() {
 //    private var urlTV: TextView? = null
 //    private var createdTV: TextView? = null
 
-    private val viewModel: EpisodeDetailViewModel by lazy {
+    private val viewModel: EpisodeDetailViewModelInterface by lazy {
         ViewModelProvider(this).get(EpisodeDetailViewModel::class.java)
     }
     private var epId = -1

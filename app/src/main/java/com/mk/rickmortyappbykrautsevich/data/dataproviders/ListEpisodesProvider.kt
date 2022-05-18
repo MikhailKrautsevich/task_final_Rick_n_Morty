@@ -1,7 +1,9 @@
 package com.mk.rickmortyappbykrautsevich.data.dataproviders
 
 import android.util.Log
-import com.mk.rickmortyappbykrautsevich.App
+import com.mk.rickmortyappbykrautsevich.data.app.App
+import com.mk.rickmortyappbykrautsevich.data.app.NetworkChecker
+import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListEpisodesProviderInterface
 import com.mk.rickmortyappbykrautsevich.data.db.entities.EpisodeEntity
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.EpisodeData
 import com.mk.rickmortyappbykrautsevich.data.retrofit.RetrofitHelper
@@ -16,7 +18,7 @@ import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class ListEpisodeProvider {
+class ListEpisodesProvider : ListEpisodesProviderInterface {
     private var api: GetEpisodesApi? = null
     private var currentPageNumber = 1
 
@@ -24,16 +26,16 @@ class ListEpisodeProvider {
     private var maxPageNumber = 3
     private var currentQuery: EpisodeQuery? = null
 
-    private val app = App.instance
-    val dao = app?.getDataBase()?.getEpisodeDao()
+    private val checker : NetworkChecker = App.instance as NetworkChecker
+    val dao = App.instance?.getDataBase()?.getEpisodeDao()
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
         api = RetrofitHelper.getEpsApi(retrofit)
     }
 
-    fun loadEpisodes(query: EpisodeQuery?): Single<List<EpisodeData>>? {
-        val isNetworkAvailable = app!!.isNetworkAvailable()
+    override fun loadEpisodes(query: EpisodeQuery?): Single<List<EpisodeData>>? {
+        val isNetworkAvailable = checker.isNetworkAvailable()
         if (isNetworkAvailable) {
             currentPageNumber = 1
             currentQuery = query
@@ -67,7 +69,7 @@ class ListEpisodeProvider {
         }
     }
 
-    fun loadNewPage(): Single<List<EpisodeData>>? {
+    override fun loadNewPage(): Single<List<EpisodeData>>? {
         return if (hasMoreData()) {
             Log.d("12347", "Provider $maxPageNumber $currentQuery")
             val single = api?.getEpisodes(
@@ -101,7 +103,7 @@ class ListEpisodeProvider {
         return l
     }
 
-    fun hasMoreData(): Boolean = currentPageNumber + 1 <= maxPageNumber
+    override fun hasMoreData(): Boolean = currentPageNumber + 1 <= maxPageNumber
 
     private fun getMaxPage(container: AllEpisodesContainer) {
         maxPageNumber = container.info.pages
