@@ -2,7 +2,7 @@ package com.mk.rickmortyappbykrautsevich.data.dataproviders
 
 import android.util.Log
 import com.mk.rickmortyappbykrautsevich.data.app.App
-import com.mk.rickmortyappbykrautsevich.data.app.NetworkChecker
+import com.mk.rickmortyappbykrautsevich.data.utils.NetworkChecker
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListEpisodesProviderInterface
 import com.mk.rickmortyappbykrautsevich.data.db.entities.EpisodeEntity
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.EpisodeData

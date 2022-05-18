@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import com.mk.rickmortyappbykrautsevich.data.app.NetworkChecker
 import javax.inject.Inject
 
 class NetworkCheckerImpl @Inject constructor(val context: Context) : NetworkChecker {
