@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 class ListEpisodesProvider : ListEpisodesProviderInterface {
     private var api: GetEpisodesApi? = null
@@ -26,12 +27,14 @@ class ListEpisodesProvider : ListEpisodesProviderInterface {
     private var maxPageNumber = 3
     private var currentQuery: EpisodeQuery? = null
 
-    private val checker : NetworkChecker = App.instance as NetworkChecker
+    @Inject
+    lateinit var checker : NetworkChecker
     val dao = App.instance?.getDataBase()?.getEpisodeDao()
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
         api = RetrofitHelper.getEpsApi(retrofit)
+        App.instance!!.component.inject(this)
     }
 
     override fun loadEpisodes(query: EpisodeQuery?): Single<List<EpisodeData>>? {

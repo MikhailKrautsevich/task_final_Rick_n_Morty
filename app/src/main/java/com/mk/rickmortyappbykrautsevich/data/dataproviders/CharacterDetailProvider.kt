@@ -13,6 +13,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.regex.Pattern
+import javax.inject.Inject
 
 class CharacterDetailProvider : CharacterDetailProviderInterface {
     companion object {
@@ -21,7 +22,8 @@ class CharacterDetailProvider : CharacterDetailProviderInterface {
     }
 
     private val db = App.instance?.getDataBase()
-    private val checker : NetworkChecker = App.instance as NetworkChecker
+    @Inject
+    lateinit var checker : NetworkChecker
     private val episodeDao = db?.getEpisodeDao()
     private val characterDao = db?.getCharacterDao()
     private var api: GetTheCharacterApi? = null
@@ -29,6 +31,7 @@ class CharacterDetailProvider : CharacterDetailProviderInterface {
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
         api = RetrofitHelper.getTheCharApi(retrofit)
+        App.instance!!.component.inject(this)
     }
 
     override fun loadData(id: Int): Single<CharacterData>? {

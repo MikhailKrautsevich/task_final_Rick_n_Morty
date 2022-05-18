@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 class ListLocationsProvider : ListLocationsProviderInterface{
     private var api: GetLocationsApi? = null
@@ -26,12 +27,14 @@ class ListLocationsProvider : ListLocationsProviderInterface{
     private var maxPageNumber = 7
     private var currentQuery: LocationQuery? = null
 
-    private val checker : NetworkChecker = App.instance as NetworkChecker
+    @Inject
+    lateinit var checker : NetworkChecker
     private val dao = App.instance?.getDataBase()?.getLocationDao()
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
         api = RetrofitHelper.getLocsApi(retrofit)
+        App.instance!!.component.inject(this)
     }
 
     override fun loadLocations(query: LocationQuery?): Single<List<LocationData>>? {

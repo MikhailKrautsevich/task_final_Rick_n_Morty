@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleObserver
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 class ListCharactersProvider : ListCharactersProviderInterface {
 
@@ -28,11 +29,13 @@ class ListCharactersProvider : ListCharactersProviderInterface {
     private var currentQuery: CharacterQuery? = null
 
     private val dao = App.instance?.getDataBase()?.getCharacterDao()
-    private val checker : NetworkChecker = App.instance as NetworkChecker
+    @Inject
+    lateinit var checker : NetworkChecker
 
     init {
         val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
         api = RetrofitHelper.getCharsApi(retrofit)
+        App.instance!!.component.inject(this)
     }
 
     override fun loadCharacters(query: CharacterQuery?): Single<List<CharacterData>>? {
