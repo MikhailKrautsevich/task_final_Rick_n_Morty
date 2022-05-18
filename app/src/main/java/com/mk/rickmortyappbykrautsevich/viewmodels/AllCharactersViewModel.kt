@@ -94,5 +94,10 @@ class AllCharactersViewModel : ViewModel() {
         charactersList.sortBy { it.id }
         listLiveData.postValue(charactersList)
     }
+
+    fun makeQueryForSearchView(s : String?){
+        val query = CharacterQuery(s, "", "", "", "")
+        getData(query)
+    }
 }
 

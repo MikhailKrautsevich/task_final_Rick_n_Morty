@@ -98,4 +98,9 @@ class AllLocationViewModel : ViewModel() {
         locationsList.sortBy { it.id }
         listLiveData.postValue(locationsList)
     }
+
+    fun makeQueryForSearchView(s : String?){
+        val query = LocationQuery(s, "", "")
+        getData(query)
+    }
 }

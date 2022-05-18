@@ -39,11 +39,13 @@ class ListLocationsProvider {
             currentQuery = query
             val single: Single<AllLocationsContainer>? = if (query == null) {
                 api?.getLocations()
-            } else api?.getLocations(
-                name = query.name,
-                type = query.type,
-                dimension = query.dimension
-            )
+            } else {
+                api?.getLocations(
+                    name = query.name,
+                    type = query.type,
+                    dimension = query.dimension
+                )
+            }
             return handleSingle(single)
         } else {
             // отключаем пагинацию

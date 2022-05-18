@@ -2,11 +2,11 @@ package com.mk.rickmortyappbykrautsevich.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,9 +19,15 @@ import com.mk.rickmortyappbykrautsevich.enums.Gender
 import com.mk.rickmortyappbykrautsevich.enums.Status
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers.CharacterAdapter
 import com.mk.rickmortyappbykrautsevich.fragments.recyclers_data.CharacterData
+import com.mk.rickmortyappbykrautsevich.fragments.utils.SearchViewUtil
 import com.mk.rickmortyappbykrautsevich.retrofit.models.queries.CharacterQuery
 import com.mk.rickmortyappbykrautsevich.viewmodels.AllCharactersViewModel
 import com.squareup.picasso.Picasso
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
+import java.util.concurrent.TimeUnit
 
 class CharactersListFragment : Fragment() {
 
@@ -83,6 +89,11 @@ class CharactersListFragment : Fragment() {
 
         initPullToRefresh(v)
         return v
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onStart() {
@@ -148,6 +159,39 @@ class CharactersListFragment : Fragment() {
         super.onDetach()
         hasBottomNavs = null
         host = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_search, menu)
+        val menuItem = menu.findItem(R.id.search_menu_view)
+        val searchView = menuItem.actionView as SearchView
+
+        SearchViewUtil.fromView(searchView).debounce(200, TimeUnit.MILLISECONDS)
+            .filter { t -> t.isNotBlank() && t.length >= 3 }
+            .map { t -> t.trim() }
+            .distinctUntilChanged()
+            .switchMap { t -> Observable.just(t) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : Observer<String> {
+                override fun onNext(t: String) {
+                    Log.d("12356", "onNext: $t")
+                    viewModel.makeQueryForSearchView(t)
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                    Log.d("12356", "onSubscribe")
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.d("12356", "onError: ${e.localizedMessage}")
+                }
+
+                override fun onComplete() {
+                    Log.d("12356", "onComplete}")
+                }
+
+            })
     }
 
     private fun initSpinners() {

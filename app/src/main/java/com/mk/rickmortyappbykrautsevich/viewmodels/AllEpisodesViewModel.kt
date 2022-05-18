@@ -98,4 +98,9 @@ class AllEpisodesViewModel : ViewModel() {
         episodesList.sortBy { it.id }
         listLiveData.postValue(episodesList)
     }
+
+    fun makeQueryForSearchView(s : String?){
+        val query = EpisodeQuery(s, "")
+        getData(query)
+    }
 }
