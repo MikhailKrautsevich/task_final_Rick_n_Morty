@@ -1,7 +1,7 @@
 package com.mk.rickmortyappbykrautsevich.data.dataproviders
 
 import com.mk.rickmortyappbykrautsevich.data.app.App
-import com.mk.rickmortyappbykrautsevich.data.app.NetworkChecker
+import com.mk.rickmortyappbykrautsevich.data.utils.NetworkChecker
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.LocationDetailProviderInterface
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.LocationData
