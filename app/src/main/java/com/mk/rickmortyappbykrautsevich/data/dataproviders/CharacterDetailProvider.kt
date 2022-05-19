@@ -5,7 +5,6 @@ import com.mk.rickmortyappbykrautsevich.data.utils.NetworkChecker
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.CharacterDetailProviderInterface
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.EpisodeData
-import com.mk.rickmortyappbykrautsevich.data.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.data.retrofit.api.GetTheCharacterApi
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.CharacterRetrofitModel
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.EpisodeRetrofitModel
@@ -22,22 +21,23 @@ class CharacterDetailProvider : CharacterDetailProviderInterface {
     }
 
     private val db = App.instance?.getDataBase()
+
     @Inject
-    lateinit var checker : NetworkChecker
+    lateinit var checker: NetworkChecker
     private val episodeDao = db?.getEpisodeDao()
     private val characterDao = db?.getCharacterDao()
-    private var api: GetTheCharacterApi? = null
+
+    @Inject
+    lateinit var api: GetTheCharacterApi
 
     init {
-        val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
-        api = RetrofitHelper.getTheCharApi(retrofit)
         App.instance!!.component.inject(this)
     }
 
     override fun loadData(id: Int): Single<CharacterData>? {
         val isNetworkAvailable = checker.isNetworkAvailable()
         return if (isNetworkAvailable) {
-            val single = api!!.getCharacter(id).subscribeOn(Schedulers.io())
+            val single = api.getCharacter(id).subscribeOn(Schedulers.io())
             return handleSingle(single)
         } else {
             val fromCash = characterDao!!.getTheCharacter(id).subscribeOn(Schedulers.io())
@@ -63,7 +63,7 @@ class CharacterDetailProvider : CharacterDetailProviderInterface {
                 .subscribeOn(Schedulers.computation())
 
             val epsRetrofitModels: Single<List<EpisodeRetrofitModel>> = single.flatMap {
-                api!!.getList(it)
+                api.getList(it)
             }.subscribeOn(Schedulers.io())
 
             val result: Single<List<EpisodeData>> = epsRetrofitModels.toObservable()

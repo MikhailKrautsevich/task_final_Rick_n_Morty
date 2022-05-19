@@ -6,7 +6,6 @@ import com.mk.rickmortyappbykrautsevich.data.utils.NetworkChecker
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListCharactersProviderInterface
 import com.mk.rickmortyappbykrautsevich.data.db.entities.CharacterEntity
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
-import com.mk.rickmortyappbykrautsevich.data.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.data.retrofit.api.GetCharactersApi
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.AllCharactersContainer
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.CharacterRetrofitModel
@@ -21,7 +20,8 @@ import javax.inject.Inject
 
 class ListCharactersProvider : ListCharactersProviderInterface {
 
-    private var api: GetCharactersApi? = null
+    @Inject
+    lateinit var api: GetCharactersApi
     private var currentPageNumber = 1
 
     // при запросе по умолчанию число страниц 42
@@ -29,12 +29,11 @@ class ListCharactersProvider : ListCharactersProviderInterface {
     private var currentQuery: CharacterQuery? = null
 
     private val dao = App.instance?.getDataBase()?.getCharacterDao()
+
     @Inject
-    lateinit var checker : NetworkChecker
+    lateinit var checker: NetworkChecker
 
     init {
-        val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
-        api = RetrofitHelper.getCharsApi(retrofit)
         App.instance!!.component.inject(this)
     }
 
@@ -43,9 +42,9 @@ class ListCharactersProvider : ListCharactersProviderInterface {
         if (isNetworkAvailable) {
             currentPageNumber = 1
             currentQuery = query
-            val single: Single<AllCharactersContainer>? = if (query == null) {
-                api?.getCharacters()
-            } else api?.getCharacters(
+            val single: Single<AllCharactersContainer> = if (query == null) {
+                api.getCharacters()
+            } else api.getCharacters(
                 name = query.name,
                 status = query.status,
                 species = query.species,
@@ -81,7 +80,7 @@ class ListCharactersProvider : ListCharactersProviderInterface {
 
     override fun loadNewPage(): Single<List<CharacterData>>? {
         return if (hasMoreData()) {
-            val single = api?.getCharacters(
+            val single = api.getCharacters(
                 page = ++currentPageNumber,
                 name = currentQuery?.name,
                 status = currentQuery?.status,

@@ -5,7 +5,6 @@ import com.mk.rickmortyappbykrautsevich.data.utils.NetworkChecker
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.LocationDetailProviderInterface
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.CharacterData
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.LocationData
-import com.mk.rickmortyappbykrautsevich.data.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.data.retrofit.api.GetTheLocationApi
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.CharacterRetrofitModel
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.LocationRetrofitModel
@@ -15,29 +14,30 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-class LocationDetailProvider : LocationDetailProviderInterface{
+class LocationDetailProvider : LocationDetailProviderInterface {
     companion object {
         const val TO_REPLACE = "https://rickandmortyapi.com/api/character/"
         const val REGEX = "https://rickandmortyapi.com/api/character/[0-9]+"
     }
 
     private val db = App.instance?.getDataBase()
+
     @Inject
-    lateinit var checker : NetworkChecker
+    lateinit var checker: NetworkChecker
     private val locationDao = db?.getLocationDao()
     private val characterDao = db?.getCharacterDao()
-    private var api: GetTheLocationApi? = null
+
+    @Inject
+    lateinit var api: GetTheLocationApi
 
     init {
-        val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
-        api = RetrofitHelper.getTheLocApi(retrofit)
         App.instance!!.component.inject(this)
     }
 
     override fun loadData(id: Int): Single<LocationData>? {
         val isNetworkAvailable = checker.isNetworkAvailable()
         return if (isNetworkAvailable) {
-            val single = api!!.getLocation(id).subscribeOn(Schedulers.io())
+            val single = api.getLocation(id).subscribeOn(Schedulers.io())
             handleSingle(single)
         } else {
             val fromCash = locationDao!!.getTheLocation(id).subscribeOn(Schedulers.io())
@@ -63,7 +63,7 @@ class LocationDetailProvider : LocationDetailProviderInterface{
                 .subscribeOn(Schedulers.computation())
 
             val locsRetrofitModels: Single<List<CharacterRetrofitModel>> = single.flatMap {
-                api!!.getList(it)
+                api.getList(it)
             }.subscribeOn(Schedulers.io())
 
             val result: Single<List<CharacterData>> = locsRetrofitModels.toObservable()

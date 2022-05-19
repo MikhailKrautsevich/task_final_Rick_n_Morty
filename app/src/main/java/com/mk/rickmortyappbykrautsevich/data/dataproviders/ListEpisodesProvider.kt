@@ -6,7 +6,6 @@ import com.mk.rickmortyappbykrautsevich.data.utils.NetworkChecker
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListEpisodesProviderInterface
 import com.mk.rickmortyappbykrautsevich.data.db.entities.EpisodeEntity
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.EpisodeData
-import com.mk.rickmortyappbykrautsevich.data.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.data.retrofit.api.GetEpisodesApi
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.AllEpisodesContainer
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.queries.EpisodeQuery
@@ -20,7 +19,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class ListEpisodesProvider : ListEpisodesProviderInterface {
-    private var api: GetEpisodesApi? = null
+    @Inject
+    lateinit var api: GetEpisodesApi
     private var currentPageNumber = 1
 
     // при запросе по умолчанию число страниц 3
@@ -28,12 +28,10 @@ class ListEpisodesProvider : ListEpisodesProviderInterface {
     private var currentQuery: EpisodeQuery? = null
 
     @Inject
-    lateinit var checker : NetworkChecker
+    lateinit var checker: NetworkChecker
     val dao = App.instance?.getDataBase()?.getEpisodeDao()
 
     init {
-        val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
-        api = RetrofitHelper.getEpsApi(retrofit)
         App.instance!!.component.inject(this)
     }
 
@@ -42,9 +40,9 @@ class ListEpisodesProvider : ListEpisodesProviderInterface {
         if (isNetworkAvailable) {
             currentPageNumber = 1
             currentQuery = query
-            val single: Single<AllEpisodesContainer>? = if (query == null) {
-                api?.getEpisodes()
-            } else api?.getEpisodes(
+            val single: Single<AllEpisodesContainer> = if (query == null) {
+                api.getEpisodes()
+            } else api.getEpisodes(
                 name = query.name,
                 episode = query.code
             )
@@ -75,7 +73,7 @@ class ListEpisodesProvider : ListEpisodesProviderInterface {
     override fun loadNewPage(): Single<List<EpisodeData>>? {
         return if (hasMoreData()) {
             Log.d("12347", "Provider $maxPageNumber $currentQuery")
-            val single = api?.getEpisodes(
+            val single = api.getEpisodes(
                 page = ++currentPageNumber,
                 name = currentQuery?.name,
                 episode = currentQuery?.code

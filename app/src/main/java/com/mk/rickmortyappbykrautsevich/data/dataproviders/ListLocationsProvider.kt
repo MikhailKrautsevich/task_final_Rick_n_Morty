@@ -6,7 +6,6 @@ import com.mk.rickmortyappbykrautsevich.data.utils.NetworkChecker
 import com.mk.rickmortyappbykrautsevich.data.dataproviders.interfaces.ListLocationsProviderInterface
 import com.mk.rickmortyappbykrautsevich.data.db.entities.LocationEntity
 import com.mk.rickmortyappbykrautsevich.presentation.fragments.recyclers_data.LocationData
-import com.mk.rickmortyappbykrautsevich.data.retrofit.RetrofitHelper
 import com.mk.rickmortyappbykrautsevich.data.retrofit.api.GetLocationsApi
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.AllLocationsContainer
 import com.mk.rickmortyappbykrautsevich.data.retrofit.models.LocationRetrofitModel
@@ -19,8 +18,9 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class ListLocationsProvider : ListLocationsProviderInterface{
-    private var api: GetLocationsApi? = null
+class ListLocationsProvider : ListLocationsProviderInterface {
+    @Inject
+    lateinit var api: GetLocationsApi
     private var currentPageNumber = 1
 
     // при запросе по умолчанию число страниц 7
@@ -28,12 +28,10 @@ class ListLocationsProvider : ListLocationsProviderInterface{
     private var currentQuery: LocationQuery? = null
 
     @Inject
-    lateinit var checker : NetworkChecker
+    lateinit var checker: NetworkChecker
     private val dao = App.instance?.getDataBase()?.getLocationDao()
 
     init {
-        val retrofit = RetrofitHelper.getRetrofit(RetrofitHelper.getOkHttpClient())
-        api = RetrofitHelper.getLocsApi(retrofit)
         App.instance!!.component.inject(this)
     }
 
@@ -42,10 +40,10 @@ class ListLocationsProvider : ListLocationsProviderInterface{
         if (isNetworkAvailable) {
             currentPageNumber = 1
             currentQuery = query
-            val single: Single<AllLocationsContainer>? = if (query == null) {
-                api?.getLocations()
+            val single: Single<AllLocationsContainer> = if (query == null) {
+                api.getLocations()
             } else {
-                api?.getLocations(
+                api.getLocations(
                     name = query.name,
                     type = query.type,
                     dimension = query.dimension
@@ -78,7 +76,7 @@ class ListLocationsProvider : ListLocationsProviderInterface{
 
     override fun loadNewPage(): Single<List<LocationData>>? {
         return if (hasMoreData()) {
-            val single = api?.getLocations(
+            val single = api.getLocations(
                 page = ++currentPageNumber,
                 name = currentQuery?.name,
                 type = currentQuery?.type,

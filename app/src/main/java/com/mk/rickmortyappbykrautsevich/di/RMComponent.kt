@@ -10,7 +10,7 @@ import dagger.BindsInstance
 import dagger.Component
 
 @ApplicationScope
-@Component(modules = [PicassoModule::class, NetworkCheckerModule::class])
+@Component(modules = [PicassoModule::class, NetworkCheckerModule::class, ApiModule::class])
 interface RMComponent {
 
     // для фрагментов
@@ -28,7 +28,7 @@ interface RMComponent {
     fun inject(pr: ListLocationsProvider)
 
     @Component.Factory
-    interface RMComponentFactory{
-        fun create(@BindsInstance context: Context) : RMComponent
+    interface RMComponentFactory {
+        fun create(@BindsInstance context: Context): RMComponent
     }
 }
