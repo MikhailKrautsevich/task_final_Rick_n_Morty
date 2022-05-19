@@ -6,7 +6,7 @@
     - SQlite, Room
     - MVVM, Clean Architecture
     - RxJava
-    - Dagger2 (очень ограниченно, заинжекчен только Picasso и NetworkChecker)
+    - Dagger2 (очень ограниченно, заинжекчены только Picasso, NetworkChecker и Api)
 
 Задание: Разработка Android приложения для работы с rickandmortyapi.com
 Язык разработки: Котлин 
